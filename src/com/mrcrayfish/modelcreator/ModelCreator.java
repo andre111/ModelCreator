@@ -769,6 +769,7 @@ public class ModelCreator extends JFrame
 								break;
 							}
 							}
+							manager.updateValues();
 						}
 					} else {
 						sidebarClickedElement = null;
