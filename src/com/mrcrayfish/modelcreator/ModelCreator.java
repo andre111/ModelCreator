@@ -38,6 +38,7 @@ import org.newdawn.slick.util.ResourceLoader;
 import com.mrcrayfish.modelcreator.dialog.WelcomeDialog;
 import com.mrcrayfish.modelcreator.element.Element;
 import com.mrcrayfish.modelcreator.element.ElementManager;
+import com.mrcrayfish.modelcreator.element.Face;
 import com.mrcrayfish.modelcreator.panels.SidebarPanel;
 import com.mrcrayfish.modelcreator.texture.PendingTexture;
 import com.mrcrayfish.modelcreator.texture.TextureManager;
@@ -294,13 +295,15 @@ public class ModelCreator extends JFrame
 				width = newDim.width;
 				height = newDim.height;
 			}
+			
+			int offset = width / sidebar;
 
 			handleInput();
 
-			glViewport(0, 0, width, height);
+			glViewport(offset, 0, width-offset, height);
 			glMatrixMode(GL_PROJECTION);
 			glLoadIdentity();
-			GLU.gluPerspective(60F, (float) width / (float) height, 0.3F, 1000F);
+			GLU.gluPerspective(60F, (float) (width-offset) / (float) height, 0.3F, 1000F);
 			glMatrixMode(GL_MODELVIEW);
 			glLoadIdentity();
 			glEnable(GL_DEPTH_TEST);
@@ -324,6 +327,7 @@ public class ModelCreator extends JFrame
 			glLoadIdentity();
 
 			drawOverlay();
+			drawSideView(offset);
 
 			Display.update();
 		}
@@ -362,70 +366,441 @@ public class ModelCreator extends JFrame
 
 	public void drawOverlay()
 	{
-		glTranslatef(width - 80, height - 80, 0);
-		glLineWidth(2F);
-		glRotated(-camera.getRY(), 0, 0, 1);
+		GL11.glPushMatrix();
+		{
+			glTranslatef(width - 80, height - 80, 0);
+			glLineWidth(2F);
+			glRotated(-camera.getRY(), 0, 0, 1);
+	
+			GL11.glEnable(GL11.GL_BLEND);
+			GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+			font.drawString(-7, -75, "N", new Color(1, 1, 1));
+			GL11.glDisable(GL11.GL_BLEND);
+	
+			glColor3d(0.6, 0.6, 0.6);
+			glBegin(GL_LINES);
+			{
+				glVertex2i(0, -50);
+				glVertex2i(0, 50);
+				glVertex2i(-50, 0);
+				glVertex2i(50, 0);
+			}
+			glEnd();
+	
+			glColor3d(0.3, 0.3, 0.6);
+			glBegin(GL_TRIANGLES);
+			{
+				glVertex2i(-5, -45);
+				glVertex2i(0, -50);
+				glVertex2i(5, -45);
+	
+				glVertex2i(-5, 45);
+				glVertex2i(0, 50);
+				glVertex2i(5, 45);
+	
+				glVertex2i(-45, -5);
+				glVertex2i(-50, 0);
+				glVertex2i(-45, 5);
+	
+				glVertex2i(45, -5);
+				glVertex2i(50, 0);
+				glVertex2i(45, 5);
+			}
+			glEnd();
+		}
+		GL11.glPopMatrix();
+	}
+	
+	private int sidebar = 4;
+	private float[] sideViewX = { 30, 30, 30 };
+	private float[] sideViewY = { 6, 6, 6 };
+	private float[] sideViewSizes = { 250, 250, 250 };
+	
+	private Element sidebarClickedElement = null;
+	private int sidebarClickField = 0;
+	private int sidebarClickButton = 0;
+	private double sidebarMXStart = 0;
+	private double sidebarMYStart = 0;
+	public void drawSideView(int w)
+	{
+		GL11.glPushMatrix();
+		{
+			glTranslatef(w, 0, 0);
+			glLineWidth(2F);
+	
+			//GL11.glEnable(GL11.GL_BLEND);
+			//GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+			//font.drawString(-7, -75, "N", new Color(1, 1, 1));
+			//GL11.glDisable(GL11.GL_BLEND);
+	
+			glColor3d(0.6, 0.6, 0.6);
+			glBegin(GL_LINES);
+			{
+				glVertex2i(0, 0);
+				glVertex2i(0, height);
+			}
+			glEnd();
+			glTranslatef(-w, 0, 0);
+			
+			int h = height / 3;
+			int ystart = 0;
 
+			for(int i=0; i<3; i++) {
+				GL11.glPushMatrix();
+				{
+					glViewport(0, ystart, w, h);
+					glMatrixMode(GL_PROJECTION);
+					glLoadIdentity();
+					GLU.gluOrtho2D(0, w, ystart+h, ystart);
+					glMatrixMode(GL_MODELVIEW);
+					glLoadIdentity();
+					
+					glTranslatef(0, ystart, 0);
+					
+					drawSideView(sideViewX[i], sideViewY[i], sideViewSizes[i], i);
+					
+					glLineWidth(2F);
+					glBegin(GL_LINES);
+					{
+						glVertex2i(0, h);
+						glVertex2i(w, h);
+					}
+					glEnd();
+				}
+				GL11.glPopMatrix();
+				ystart += height / 3;
+			}
+		}
+		GL11.glPopMatrix();
+	}
+	
+	public void drawSideView(float x, float y, float size, int side) {
+		GL11.glPushMatrix();
+		{
+			glTranslatef(x, y, 0);
+			glLineWidth(2F);
+			
+			//outside lines
+			glBegin(GL_LINES);
+			{
+				glVertex2f(0, 0);
+				glVertex2f(0, size);
+				
+				glVertex2f(size, 0);
+				glVertex2f(size, size);
+				
+				glVertex2f(0, 0);
+				glVertex2f(size, 0);
+				
+				glVertex2f(0, size);
+				glVertex2f(size, size);
+			}
+			glEnd();
+			
+			//inside lines
+			glLineWidth(1F);
+			for(int i=1; i<16; i++) {
+				glBegin(GL_LINES);
+				{
+					glVertex2f(size/16*i, 0);
+					glVertex2f(size/16*i, size);
+					
+					glVertex2f(0, size/16*i);
+					glVertex2f(size, size/16*i);
+				}
+				glEnd();
+			}
+			
+			//Cubes
+			for (int i = 0; i < manager.getCuboidCount(); i++)
+			{
+				Element cube = manager.getCuboid(i);
+				if(!manager.getSelectedCuboid().equals(cube))
+					continue;
+					
+				Face face = null;
+				double xstart = 0;
+				double ystart = 0;
+				double width = 0;
+				double height = 0;
+				
+				switch(side) {
+				//top
+				case 0: {
+					face = cube.getAllFaces()[4];
+					xstart = cube.getStartX() * size/16.0;
+					ystart = cube.getStartZ() * size/16.0;
+					width = cube.getWidth() * size/16.0;
+					height = cube.getDepth() * size/16.0;
+					GL11.glColor3f(0, 1, 1);
+					break;
+				}
+				//south
+				case 1: {
+					face = cube.getAllFaces()[2];
+					xstart = cube.getStartX() * size/16.0;
+					ystart = (16 - cube.getStartY() - cube.getHeight()) * size/16.0;
+					width = cube.getWidth() * size/16.0;
+					height = cube.getHeight() * size/16.0;
+					GL11.glColor3f(1, 0, 0);
+					break;
+				}
+				//west
+				case 2: {
+					face = cube.getAllFaces()[3];
+					xstart = cube.getStartZ() * size/16.0;
+					ystart = (16 - cube.getStartY() - cube.getHeight()) * size/16.0;
+					width = cube.getDepth() * size/16.0;
+					height = cube.getHeight() * size/16.0;
+					GL11.glColor3f(1, 1, 0);
+					break;
+				}
+				}
+				
+				//Draw face
+				if(face!=null) {
+					GL11.glPushMatrix();
+					{
+						face.startRender();
+	
+						GL11.glBegin(GL11.GL_QUADS);
+						{
+							if (face.isBinded())
+								GL11.glTexCoord2d(face.shouldFitTexture() ? 0 : (face.getStartU() / 16), face.shouldFitTexture() ? 0 : (face.getEndV() / 16));
+							GL11.glVertex2d(xstart, ystart + height);
+	
+							if (face.isBinded())
+								GL11.glTexCoord2d(face.shouldFitTexture() ? 1 : (face.getEndU() / 16), face.shouldFitTexture() ? 0 : (face.getEndV() / 16));
+							GL11.glVertex2d(xstart + width, ystart + height);
+	
+							if (face.isBinded())
+								GL11.glTexCoord2d(face.shouldFitTexture() ? 1 : (face.getEndU() / 16), face.shouldFitTexture() ? 1 : (face.getStartV() / 16));
+							GL11.glVertex2d(xstart + width, ystart);
+	
+							if (face.isBinded())
+								GL11.glTexCoord2d(face.shouldFitTexture() ? 1 : (face.getStartU() / 16), face.shouldFitTexture() ? 1 : (face.getStartV() / 16));
+							GL11.glVertex2d(xstart, ystart);
+						}
+						GL11.glEnd();
+	
+						face.finishRender();
+					}
+					GL11.glPopMatrix();
+					
+					glColor3d(0.2, 0.2, 0.2);
+					glLineWidth(2F);
+					glBegin(GL_LINES);
+					{
+						glVertex2d(xstart, ystart);
+						glVertex2d(xstart, ystart+height);
+						
+						glVertex2d(xstart+width, ystart);
+						glVertex2d(xstart+width, ystart+height);
+						
+						glVertex2d(xstart, ystart);
+						glVertex2d(xstart+width, ystart);
+						
+						glVertex2d(xstart, ystart+height);
+						glVertex2d(xstart+width, ystart+height);
+					}
+					glEnd();
+				}
+			}
+		}
+		GL11.glPopMatrix();
+		
 		GL11.glEnable(GL11.GL_BLEND);
 		GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
-		font.drawString(-7, -75, "N", new Color(1, 1, 1));
+		if(side==0) {
+			font.drawString(0, 0, "Top", new Color(1, 1, 1));
+		} else if(side==1) {
+			font.drawString(0, 0, "South", new Color(1, 1, 1));
+		} else if(side==2) {
+			font.drawString(0, 0, "West", new Color(1, 1, 1));
+		}
 		GL11.glDisable(GL11.GL_BLEND);
-
+		
 		glColor3d(0.6, 0.6, 0.6);
-		glBegin(GL_LINES);
-		{
-			glVertex2i(0, -50);
-			glVertex2i(0, 50);
-			glVertex2i(-50, 0);
-			glVertex2i(50, 0);
-		}
-		glEnd();
-
-		glColor3d(0.3, 0.3, 0.6);
-		glBegin(GL_TRIANGLES);
-		{
-			glVertex2i(-5, -45);
-			glVertex2i(0, -50);
-			glVertex2i(5, -45);
-
-			glVertex2i(-5, 45);
-			glVertex2i(0, 50);
-			glVertex2i(5, 45);
-
-			glVertex2i(-45, -5);
-			glVertex2i(-50, 0);
-			glVertex2i(-45, 5);
-
-			glVertex2i(45, -5);
-			glVertex2i(50, 0);
-			glVertex2i(45, 5);
-		}
-		glEnd();
-
 	}
 
 	public void handleInput()
 	{
 		final float cameraMod = Math.abs(camera.getZ());
 
-		if (Mouse.isButtonDown(0))
-		{
-			final float modifier = (cameraMod * 0.05f);
-			camera.addX((float) (Mouse.getDX() * 0.01F) * modifier);
-			camera.addY((float) (Mouse.getDY() * 0.01F) * modifier);
-		}
-		else if (Mouse.isButtonDown(1))
-		{
-			final float modifier = applyLimit(cameraMod * 0.1f);
-			camera.rotateX(-(float) (Mouse.getDY() * 0.5F) * modifier);
-			final float rxAbs = Math.abs(camera.getRX());
-			camera.rotateY((rxAbs >= 90 && rxAbs < 270 ? -1 : 1) * (float) (Mouse.getDX() * 0.5F) * modifier);
-		}
+		if(Mouse.getX()<width/sidebar) {
+			for(int i=0; i<3; i++) {
+				if(Mouse.getY()>height/3*i && Mouse.getY()<height/3*(i+1)) {
+					double my = Mouse.getY() - height/3*i;
+					double mx = Mouse.getX();
+					double size = sideViewSizes[i];
+					
+					if(sidebarClickField!=i || !Mouse.isButtonDown(sidebarClickButton)) {
+						sidebarClickedElement = null;
+						sidebarMXStart = 0;
+						sidebarMYStart = 0;
+					}
+					
+					my -= sideViewY[i];
+					mx -= sideViewX[i];
+					my = my/size * 16;
+					mx = mx/size * 16;
+					
+					my = (16 - my);
+					
+					if(Mouse.isButtonDown(0) || Mouse.isButtonDown(1)) {
+						if(sidebarClickedElement==null) {
+							//Cubes
+							for (int c = 0; c < manager.getCuboidCount(); c++)
+							{
+								Element cube = manager.getCuboid(c);
+								if(!manager.getSelectedCuboid().equals(cube))
+									continue;
+									
+								double xstart = 0;
+								double ystart = 0;
+								double width = 0;
+								double height = 0;
+								
+								switch(i) {
+								//top
+								case 0: {
+									xstart = cube.getStartX();
+									ystart = cube.getStartZ();
+									width = cube.getWidth();
+									height = cube.getDepth();
+									GL11.glColor3f(0, 1, 1);
+									break;
+								}
+								//south
+								case 1: {
+									xstart = cube.getStartX();
+									ystart = (16 - cube.getStartY() - cube.getHeight());
+									width = cube.getWidth();
+									height = cube.getHeight();
+									GL11.glColor3f(1, 0, 0);
+									break;
+								}
+								//west
+								case 2: {
+									xstart = cube.getStartZ();
+									ystart = (16 - cube.getStartY() - cube.getHeight());
+									width = cube.getDepth();
+									height = cube.getHeight();
+									GL11.glColor3f(1, 1, 0);
+									break;
+								}
+								}
+								
+								if(width<0) {
+									xstart += width;
+									width = -width;
+								}
+								if(height<0) {
+									ystart += height;
+									height = -height;
+								}
+								
+								if(mx>=xstart && mx<=xstart+width) {
+									if(my>=ystart && my<=ystart+height) {
+										sidebarClickedElement = cube;
+										sidebarMXStart = mx;
+										sidebarMYStart = my;
+										sidebarClickField = i;
+										if(Mouse.isButtonDown(0)) {
+											sidebarClickButton = 0;
+										} else {
+											sidebarClickButton = 1;
+										}
+									}
+								}
+							}
+						} else {
+							int offx = 0;
+							int offy = 0;
 
-		final float wheel = Mouse.getDWheel();
-		if (wheel != 0)
-		{
-			camera.addZ(wheel * (cameraMod / 5000F));
+							if(mx-sidebarMXStart>=1) {
+								offx = 1;
+								sidebarMXStart += 1;
+							} else if(mx-sidebarMXStart<=-1) {
+								offx = -1;
+								sidebarMXStart -= 1;
+							}
+
+							if(my-sidebarMYStart>=1) {
+								offy = 1;
+								sidebarMYStart += 1;
+							} else if(my-sidebarMYStart<=-1) {
+								offy = -1;
+								sidebarMYStart -= 1;
+							}
+
+							switch(i) {
+							//top
+							case 0: {
+								if(sidebarClickButton==0) {
+									sidebarClickedElement.addStartX(offx);
+									sidebarClickedElement.addStartZ(offy);
+								} else {
+									sidebarClickedElement.addWidth(offx);
+									sidebarClickedElement.addDepth(offy);
+								}
+								break;
+							}
+							//south
+							case 1: {
+								if(sidebarClickButton==0) {
+									sidebarClickedElement.addStartX(offx);
+									sidebarClickedElement.addStartY(-offy);
+								} else {
+									sidebarClickedElement.addWidth(offx);
+									sidebarClickedElement.addHeight(-offy);
+								}
+								break;
+							}
+							//west
+							case 2: {
+								if(sidebarClickButton==0) {
+									sidebarClickedElement.addStartZ(offx);
+									sidebarClickedElement.addStartY(-offy);
+								} else {
+									sidebarClickedElement.addDepth(offx);
+									sidebarClickedElement.addHeight(-offy);
+								}
+								break;
+							}
+							}
+						}
+					} else {
+						sidebarClickedElement = null;
+						sidebarMXStart = 0;
+						sidebarMYStart = 0;
+					}
+				}
+			}
+		} else {
+			sidebarClickedElement = null;
+			sidebarMXStart = 0;
+			sidebarMYStart = 0;
+			
+			if (Mouse.isButtonDown(0))
+			{
+				final float modifier = (cameraMod * 0.05f);
+				camera.addX((float) (Mouse.getDX() * 0.01F) * modifier);
+				camera.addY((float) (Mouse.getDY() * 0.01F) * modifier);
+			}
+			else if (Mouse.isButtonDown(1))
+			{
+				final float modifier = applyLimit(cameraMod * 0.1f);
+				camera.rotateX(-(float) (Mouse.getDY() * 0.5F) * modifier);
+				final float rxAbs = Math.abs(camera.getRX());
+				camera.rotateY((rxAbs >= 90 && rxAbs < 270 ? -1 : 1) * (float) (Mouse.getDX() * 0.5F) * modifier);
+			}
+	
+			final float wheel = Mouse.getDWheel();
+			if (wheel != 0)
+			{
+				camera.addZ(wheel * (cameraMod / 5000F));
+			}
 		}
 	}
 

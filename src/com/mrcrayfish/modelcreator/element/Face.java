@@ -380,6 +380,10 @@ public class Face
 			textureVEnd = textureV + cuboid.getFaceDimension(side).getHeight();
 		}
 	}
+	
+	public boolean isBinded() {
+		return binded;
+	}
 
 	public static String getFaceName(int face)
 	{
