@@ -412,9 +412,9 @@ public class ModelCreator extends JFrame
 	}
 	
 	private int sidebar = 4;
-	private float[] sideViewX = { 30, 30, 30 };
-	private float[] sideViewY = { 6, 6, 6 };
-	private float[] sideViewSizes = { 250, 250, 250 };
+	private double[] sideViewX = { 30, 30, 30 };
+	private double[] sideViewY = { 6, 6, 6 };
+	private double[] sideViewSizes = { 250, 250, 250 };
 	
 	private Element sidebarClickedElement = null;
 	private int sidebarClickField = 0;
@@ -457,6 +457,8 @@ public class ModelCreator extends JFrame
 					
 					glTranslatef(0, ystart, 0);
 					
+					sideViewX[i] = (width/sidebar/2.0 - sideViewSizes[i]/2.0);
+					sideViewY[i] = (height/3.0/2.0 - sideViewSizes[i]/2.0);
 					drawSideView(sideViewX[i], sideViewY[i], sideViewSizes[i], i);
 					
 					glLineWidth(2F);
@@ -474,26 +476,26 @@ public class ModelCreator extends JFrame
 		GL11.glPopMatrix();
 	}
 	
-	public void drawSideView(float x, float y, float size, int side) {
+	public void drawSideView(double x, double y, double size, int side) {
 		GL11.glPushMatrix();
 		{
-			glTranslatef(x, y, 0);
+			glTranslated(x, y, 0);
 			glLineWidth(2F);
 			
 			//outside lines
 			glBegin(GL_LINES);
 			{
-				glVertex2f(0, 0);
-				glVertex2f(0, size);
+				glVertex2d(0, 0);
+				glVertex2d(0, size);
 				
-				glVertex2f(size, 0);
-				glVertex2f(size, size);
+				glVertex2d(size, 0);
+				glVertex2d(size, size);
 				
-				glVertex2f(0, 0);
-				glVertex2f(size, 0);
+				glVertex2d(0, 0);
+				glVertex2d(size, 0);
 				
-				glVertex2f(0, size);
-				glVertex2f(size, size);
+				glVertex2d(0, size);
+				glVertex2d(size, size);
 			}
 			glEnd();
 			
@@ -502,11 +504,11 @@ public class ModelCreator extends JFrame
 			for(int i=1; i<16; i++) {
 				glBegin(GL_LINES);
 				{
-					glVertex2f(size/16*i, 0);
-					glVertex2f(size/16*i, size);
+					glVertex2d(size/16*i, 0);
+					glVertex2d(size/16*i, size);
 					
-					glVertex2f(0, size/16*i);
-					glVertex2f(size, size/16*i);
+					glVertex2d(0, size/16*i);
+					glVertex2d(size, size/16*i);
 				}
 				glEnd();
 			}
@@ -515,7 +517,7 @@ public class ModelCreator extends JFrame
 			for (int i = 0; i < manager.getCuboidCount(); i++)
 			{
 				Element cube = manager.getCuboid(i);
-				if(!manager.getSelectedCuboid().equals(cube))
+				if(!(cube).equals(manager.getSelectedCuboid()))
 					continue;
 					
 				Face face = null;
@@ -775,6 +777,12 @@ public class ModelCreator extends JFrame
 						sidebarClickedElement = null;
 						sidebarMXStart = 0;
 						sidebarMYStart = 0;
+					}
+					
+					final float wheel = Mouse.getDWheel();
+					if (wheel != 0)
+					{
+						sideViewSizes[i] += wheel * (sideViewSizes[i] / 5000F);
 					}
 				}
 			}
