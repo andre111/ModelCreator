@@ -212,7 +212,7 @@ public class Element
 		{
 			GL11.glPushMatrix();
 			{
-				GL11.glTranslated(getOriginX(), getOriginY(), -getOriginZ());
+				GL11.glTranslated(getOriginX(), getOriginY(), getOriginZ());
 				GL11.glColor3f(0.25F, 0.25F, 0.25F);
 				sphere.draw(0.2F, 16, 16);
 				rotateAxis();
