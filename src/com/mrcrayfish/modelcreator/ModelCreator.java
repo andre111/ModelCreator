@@ -26,6 +26,7 @@ import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 
 import org.lwjgl.LWJGLException;
+import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.GL11;
@@ -431,6 +432,8 @@ public class ModelCreator extends JFrame
 		GL11.glPopMatrix();
 	}
 
+	private int lastMouseX, lastMouseY;
+	private boolean grabbing = false;
 	public void handleInput()
 	{
 		final float cameraMod = Math.abs(camera.getZ());
@@ -446,24 +449,166 @@ public class ModelCreator extends JFrame
 				sidebar.handleInput(false);
 			}
 			
-			if (Mouse.isButtonDown(0))
+			if (Mouse.isButtonDown(0) | Mouse.isButtonDown(1))
 			{
-				final float modifier = (cameraMod * 0.05f);
-				camera.addX((float) (Mouse.getDX() * 0.01F) * modifier);
-				camera.addY((float) (Mouse.getDY() * 0.01F) * modifier);
+				if (!grabbing)
+				{
+					lastMouseX = Mouse.getX();
+					lastMouseY = Mouse.getY();
+					grabbing = true;
+				}
 			}
-			else if (Mouse.isButtonDown(1))
+			else
 			{
-				final float modifier = applyLimit(cameraMod * 0.1f);
-				camera.rotateX(-(float) (Mouse.getDY() * 0.5F) * modifier);
-				final float rxAbs = Math.abs(camera.getRX());
-				camera.rotateY((rxAbs >= 90 && rxAbs < 270 ? -1 : 1) * (float) (Mouse.getDX() * 0.5F) * modifier);
+				grabbing = false;
 			}
-	
-			final float wheel = Mouse.getDWheel();
-			if (wheel != 0)
+
+			if (Keyboard.isKeyDown(Keyboard.KEY_LCONTROL))
 			{
-				camera.addZ(wheel * (cameraMod / 5000F));
+				if (manager.getSelectedCuboid() != null)
+				{
+					int state = getCameraState(camera);
+					System.out.println(state);
+
+					if (Mouse.isButtonDown(0))
+					{
+						int newMouseX = Mouse.getX();
+						int newMouseY = Mouse.getY();
+
+						int xMovement = (int) ((newMouseX - lastMouseX) / 20);
+						int yMovement = (int) ((newMouseY - lastMouseY) / 20);
+
+						if (xMovement != 0 | yMovement != 0)
+						{
+							Element element = manager.getSelectedCuboid();
+							switch (state)
+							{
+							case 0:
+								element.addStartX(xMovement);
+								element.addStartY(yMovement);
+								break;
+							case 1:
+								element.addStartZ(xMovement);
+								element.addStartY(yMovement);
+								break;
+							case 2:
+								element.addStartX(-xMovement);
+								element.addStartY(yMovement);
+								break;
+							case 3:
+								element.addStartZ(-xMovement);
+								element.addStartY(yMovement);
+								break;
+							case 4:
+								element.addStartX(xMovement);
+								element.addStartZ(-yMovement);
+								break;
+							case 5:
+								element.addStartX(yMovement);
+								element.addStartZ(xMovement);
+								break;
+							case 6:
+								element.addStartX(-xMovement);
+								element.addStartZ(yMovement);
+								break;
+							case 7:
+								element.addStartX(-yMovement);
+								element.addStartZ(-xMovement);
+								break;
+							}
+							
+							if (xMovement != 0)
+								lastMouseX = newMouseX;
+							if (yMovement != 0)
+								lastMouseY = newMouseY;
+
+							manager.updateValues();
+							element.updateUV();
+						}
+					}
+					else if (Mouse.isButtonDown(1))
+					{
+						int newMouseX = Mouse.getX();
+						int newMouseY = Mouse.getY();
+
+						int xMovement = (int) ((newMouseX - lastMouseX) / 20);
+						int yMovement = (int) ((newMouseY - lastMouseY) / 20);
+
+						if (xMovement != 0 | yMovement != 0)
+						{
+							Element element = manager.getSelectedCuboid();
+							switch (state)
+							{
+							case 0:
+								element.addHeight(yMovement);
+								element.addWidth(xMovement);
+								break;
+							case 1:
+								element.addHeight(yMovement);
+								element.addDepth(xMovement);
+								break;
+							case 2:
+								element.addHeight(yMovement);
+								element.addWidth(-xMovement);
+								break;
+							case 3:
+								element.addHeight(yMovement);
+								element.addDepth(-xMovement);
+								break;
+							case 4:
+								element.addDepth(-yMovement);
+								element.addWidth(xMovement);
+								break;
+							case 5:
+								element.addDepth(xMovement);
+								element.addWidth(yMovement);
+								break;
+							case 6:
+								element.addDepth(yMovement);
+								element.addWidth(-xMovement);
+								break;
+							case 7:
+								element.addDepth(-xMovement);
+								element.addWidth(-yMovement);
+								break;
+							case 8:
+								element.addDepth(-yMovement);
+								element.addWidth(xMovement);
+								break;
+							}
+							
+							if (xMovement != 0)
+								lastMouseX = newMouseX;
+							if (yMovement != 0)
+								lastMouseY = newMouseY;
+
+							manager.updateValues();
+							element.updateUV();
+						}
+					}
+				}
+			}
+			else
+			{
+				if (Mouse.isButtonDown(0))
+				{
+					final float modifier = (cameraMod * 0.05f);
+					camera.addX((float) (Mouse.getDX() * 0.01F) * modifier);
+					camera.addY((float) (Mouse.getDY() * 0.01F) * modifier);
+				}
+				else if (Mouse.isButtonDown(1))
+				{
+					final float modifier = applyLimit(cameraMod * 0.1f);
+					camera.rotateX(-(float) (Mouse.getDY() * 0.5F) * modifier);
+					final float rxAbs = Math.abs(camera.getRX());
+					camera.rotateY((rxAbs >= 90 && rxAbs < 270 ? -1 : 1) * (float) (Mouse.getDX() * 0.5F) * modifier);
+				}
+
+				final float wheel = Mouse.getDWheel();
+				if (wheel != 0)
+				{
+					camera.addZ(wheel * (cameraMod / 5000F));
+				}
 			}
 		}
 	}
@@ -479,6 +624,22 @@ public class ModelCreator extends JFrame
 			value = 0.15F;
 		}
 		return value;
+	}
+	
+	public int getCameraState(Camera camera)
+	{
+		int cameraRotY = (int) (camera.getRY() >= 0 ? camera.getRY() : 360 + camera.getRY());
+		int state = (int) ((cameraRotY * 4.0F / 360.0F) + 0.5D) & 3;
+
+		if (camera.getRX() > 45)
+		{
+			state += 4;
+		}
+		if (camera.getRX() < -45)
+		{
+			state += 8;
+		}
+		return state;
 	}
 
 	public void drawGrid()
