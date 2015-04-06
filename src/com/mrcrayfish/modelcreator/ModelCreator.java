@@ -11,6 +11,7 @@ import java.awt.event.ComponentEvent;
 import java.awt.event.KeyEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.io.File;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
@@ -180,13 +181,14 @@ public class ModelCreator extends JFrame
 		menuItemExport.addActionListener(e ->
 		{
 			JFileChooser chooser = new JFileChooser();
-			chooser.setDialogTitle("Output Directory");
-			chooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+			chooser.setDialogTitle("Output file");
+			chooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
+			chooser.setSelectedFile(new File(chooser.getCurrentDirectory(), "output.json"));
 			int returnVal = chooser.showOpenDialog(null);
 			if (returnVal == JFileChooser.APPROVE_OPTION)
 			{
-				Exporter exporter = new Exporter(manager, chooser.getSelectedFile().getAbsolutePath(), "test");
-				exporter.export();
+				Exporter exporter = new Exporter(manager);
+				exporter.export(chooser.getSelectedFile());
 			}
 		});
 
