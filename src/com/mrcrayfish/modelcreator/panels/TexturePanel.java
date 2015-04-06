@@ -80,7 +80,8 @@ public class TexturePanel extends JPanel implements TextureCallback
 			if (manager.getSelectedCuboid() != null)
 			{
 				String texture = manager.getSelectedCuboid().getSelectedFace().getTextureName();
-				Clipboard.copyTexture(texture);
+				String textureLoc = manager.getSelectedCuboid().getSelectedFace().getTextureLocation();
+				Clipboard.copyTexture(texture, textureLoc);
 			}
 		});
 		btnCopy.setFont(defaultFont);
