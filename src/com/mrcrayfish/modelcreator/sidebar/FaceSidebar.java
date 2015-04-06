@@ -25,11 +25,11 @@ import com.mrcrayfish.modelcreator.element.Element;
 import com.mrcrayfish.modelcreator.element.ElementManager;
 import com.mrcrayfish.modelcreator.element.Face;
 
-public class ElementSidebar implements Sidebar
+public class FaceSidebar implements Sidebar
 {
-	private double[] sideViewX = { 0, 0, 0 };
-	private double[] sideViewY = { 0, 0, 0 };
-	private double[] sideViewSizes = { 250, 250, 250 };
+	private double[] sideViewX = { 0, 0, 0, 0, 0, 0 };
+	private double[] sideViewY = { 0, 0, 0, 0, 0, 0 };
+	private double[] sideViewSizes = { 120, 120, 120, 120, 120, 120 };
 	
 	private Element sidebarClickedElement = null;
 	private int sidebarClickField = 0;
@@ -56,10 +56,10 @@ public class ElementSidebar implements Sidebar
 	{
 		GL11.glPushMatrix();
 		{
-			int h = height / 3;
+			int h = height / 6;
 			int ystart = 0;
 
-			for(int i=0; i<3; i++) {
+			for(int i=0; i<6; i++) {
 				GL11.glPushMatrix();
 				{
 					glViewport(0, ystart, w, h);
@@ -72,7 +72,7 @@ public class ElementSidebar implements Sidebar
 					glTranslatef(0, ystart, 0);
 					
 					sideViewX[i] = (width/sidebar/2.0 - sideViewSizes[i]/2.0);
-					sideViewY[i] = (height/3.0/2.0 - sideViewSizes[i]/2.0);
+					sideViewY[i] = (height/6.0/2.0 - sideViewSizes[i]/2.0);
 					drawSideView(sideViewX[i], sideViewY[i], sideViewSizes[i], i, font);
 					
 					glLineWidth(2F);
@@ -84,7 +84,7 @@ public class ElementSidebar implements Sidebar
 					glEnd();
 				}
 				GL11.glPopMatrix();
-				ystart += height / 3;
+				ystart += height / 6;
 			}
 		}
 		GL11.glPopMatrix();
@@ -134,41 +134,41 @@ public class ElementSidebar implements Sidebar
 				if(!(cube).equals(manager.getSelectedCuboid()))
 					continue;
 					
-				Face face = null;
-				double xstart = 0;
-				double ystart = 0;
-				double width = 0;
-				double height = 0;
+				Face face = cube.getAllFaces()[5-side];
+				double xstart = face.getStartU() * size/16.0;
+				double ystart = face.getStartV() * size/16.0;
+				double width = face.getEndU() * size/16.0 - xstart;
+				double height = face.getEndV() * size/16.0 - ystart;
 				
 				switch(side) {
-				//top
+				//down
 				case 0: {
-					face = cube.getAllFaces()[4];
-					xstart = cube.getStartX() * size/16.0;
-					ystart = cube.getStartZ() * size/16.0;
-					width = cube.getWidth() * size/16.0;
-					height = cube.getDepth() * size/16.0;
-					GL11.glColor3f(0, 1, 1);
+					GL11.glColor3f(1, 0, 1);
 					break;
 				}
-				//south
+				//up
 				case 1: {
-					face = cube.getAllFaces()[2];
-					xstart = cube.getStartX() * size/16.0;
-					ystart = (16 - cube.getStartY() - cube.getHeight()) * size/16.0;
-					width = cube.getWidth() * size/16.0;
-					height = cube.getHeight() * size/16.0;
-					GL11.glColor3f(1, 0, 0);
+					GL11.glColor3f(0, 1, 1);
 					break;
 				}
 				//west
 				case 2: {
-					face = cube.getAllFaces()[3];
-					xstart = cube.getStartZ() * size/16.0;
-					ystart = (16 - cube.getStartY() - cube.getHeight()) * size/16.0;
-					width = cube.getDepth() * size/16.0;
-					height = cube.getHeight() * size/16.0;
 					GL11.glColor3f(1, 1, 0);
+					break;
+				}
+				//south
+				case 3: {
+					GL11.glColor3f(1, 0, 0);
+					break;
+				}
+				//east
+				case 4: {
+					GL11.glColor3f(0, 0, 1);
+					break;
+				}
+				//north
+				case 5: {
+					GL11.glColor3f(0, 1, 0);
 					break;
 				}
 				}
@@ -182,20 +182,20 @@ public class ElementSidebar implements Sidebar
 						GL11.glBegin(GL11.GL_QUADS);
 						{
 							if (face.isBinded())
-								GL11.glTexCoord2d(face.shouldFitTexture() ? 0 : (face.getStartU() / 16), face.shouldFitTexture() ? 1 : (face.getEndV() / 16));
-							GL11.glVertex2d(xstart, ystart + height);
+								GL11.glTexCoord2d(0, 1);
+							GL11.glVertex2d(0, size);
 	
 							if (face.isBinded())
-								GL11.glTexCoord2d(face.shouldFitTexture() ? 1 : (face.getEndU() / 16), face.shouldFitTexture() ? 1 : (face.getEndV() / 16));
-							GL11.glVertex2d(xstart + width, ystart + height);
+								GL11.glTexCoord2d(1, 1);
+							GL11.glVertex2d(size, size);
 	
 							if (face.isBinded())
-								GL11.glTexCoord2d(face.shouldFitTexture() ? 1 : (face.getEndU() / 16), face.shouldFitTexture() ? 0 : (face.getStartV() / 16));
-							GL11.glVertex2d(xstart + width, ystart);
+								GL11.glTexCoord2d(1, 0);
+							GL11.glVertex2d(size, 0);
 	
 							if (face.isBinded())
-								GL11.glTexCoord2d(face.shouldFitTexture() ? 0 : (face.getStartU() / 16), face.shouldFitTexture() ? 0 : (face.getStartV() / 16));
-							GL11.glVertex2d(xstart, ystart);
+								GL11.glTexCoord2d(0, 0);
+							GL11.glVertex2d(0, 0);
 						}
 						GL11.glEnd();
 	
@@ -228,11 +228,17 @@ public class ElementSidebar implements Sidebar
 		GL11.glEnable(GL11.GL_BLEND);
 		GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
 		if(side==0) {
-			font.drawString(0, 0, "Top", new Color(1, 1, 1));
+			font.drawString(0, 0, "Down", new Color(1, 1, 1));
 		} else if(side==1) {
-			font.drawString(0, 0, "South", new Color(1, 1, 1));
+			font.drawString(0, 0, "Up", new Color(1, 1, 1));
 		} else if(side==2) {
 			font.drawString(0, 0, "West", new Color(1, 1, 1));
+		} else if(side==3) {
+			font.drawString(0, 0, "South", new Color(1, 1, 1));
+		} else if(side==4) {
+			font.drawString(0, 0, "East", new Color(1, 1, 1));
+		} else if(side==5) {
+			font.drawString(0, 0, "North", new Color(1, 1, 1));
 		}
 		GL11.glDisable(GL11.GL_BLEND);
 		
@@ -243,9 +249,10 @@ public class ElementSidebar implements Sidebar
 	public void handleInput(boolean isMouseOver)
 	{
 		if(isMouseOver) {
-			for(int i=0; i<3; i++) {
-				if(Mouse.getY()>height/3*i && Mouse.getY()<height/3*(i+1)) {
-					double my = Mouse.getY() - height/3*i;
+			for(int i=0; i<6; i++) {
+				int side = i;
+				if(Mouse.getY()>height/6*i && Mouse.getY()<height/6*(i+1)) {
+					double my = Mouse.getY() - height/6*i;
 					double mx = Mouse.getX();
 					double size = sideViewSizes[i];
 					
@@ -271,40 +278,11 @@ public class ElementSidebar implements Sidebar
 								if(!manager.getSelectedCuboid().equals(cube))
 									continue;
 									
-								double xstart = 0;
-								double ystart = 0;
-								double width = 0;
-								double height = 0;
-								
-								switch(i) {
-								//top
-								case 0: {
-									xstart = cube.getStartX();
-									ystart = cube.getStartZ();
-									width = cube.getWidth();
-									height = cube.getDepth();
-									GL11.glColor3f(0, 1, 1);
-									break;
-								}
-								//south
-								case 1: {
-									xstart = cube.getStartX();
-									ystart = (16 - cube.getStartY() - cube.getHeight());
-									width = cube.getWidth();
-									height = cube.getHeight();
-									GL11.glColor3f(1, 0, 0);
-									break;
-								}
-								//west
-								case 2: {
-									xstart = cube.getStartZ();
-									ystart = (16 - cube.getStartY() - cube.getHeight());
-									width = cube.getDepth();
-									height = cube.getHeight();
-									GL11.glColor3f(1, 1, 0);
-									break;
-								}
-								}
+								Face face = cube.getAllFaces()[5-side];
+								double xstart = face.getStartU();
+								double ystart = face.getStartV();
+								double width = face.getEndU() - xstart;
+								double height = face.getEndV() - ystart;
 								
 								if(width<0) {
 									xstart += width;
@@ -320,7 +298,7 @@ public class ElementSidebar implements Sidebar
 										sidebarClickedElement = cube;
 										sidebarMXStart = mx;
 										sidebarMYStart = my;
-										sidebarClickField = i;
+										sidebarClickField = side;
 										if(Mouse.isButtonDown(0)) {
 											sidebarClickButton = 0;
 										} else {
@@ -349,41 +327,15 @@ public class ElementSidebar implements Sidebar
 								sidebarMYStart -= 1;
 							}
 
-							switch(i) {
-							//top
-							case 0: {
-								if(sidebarClickButton==0) {
-									sidebarClickedElement.addStartX(offx);
-									sidebarClickedElement.addStartZ(offy);
-								} else {
-									sidebarClickedElement.addWidth(offx);
-									sidebarClickedElement.addDepth(offy);
-								}
-								break;
+							if(sidebarClickButton==0) {
+								sidebarClickedElement.getAllFaces()[5-side].addTextureX(offx);
+								sidebarClickedElement.getAllFaces()[5-side].addTextureY(offy);
+							} else {
+								sidebarClickedElement.getAllFaces()[5-side].addTextureXEnd(offx);
+								sidebarClickedElement.getAllFaces()[5-side].addTextureYEnd(offy);
+								sidebarClickedElement.getAllFaces()[5-side].setAutoUVEnabled(false);
 							}
-							//south
-							case 1: {
-								if(sidebarClickButton==0) {
-									sidebarClickedElement.addStartX(offx);
-									sidebarClickedElement.addStartY(-offy);
-								} else {
-									sidebarClickedElement.addWidth(offx);
-									sidebarClickedElement.addHeight(-offy);
-								}
-								break;
-							}
-							//west
-							case 2: {
-								if(sidebarClickButton==0) {
-									sidebarClickedElement.addStartZ(offx);
-									sidebarClickedElement.addStartY(-offy);
-								} else {
-									sidebarClickedElement.addDepth(offx);
-									sidebarClickedElement.addHeight(-offy);
-								}
-								break;
-							}
-							}
+							
 							sidebarClickedElement.updateUV();
 							manager.updateValues();
 						}

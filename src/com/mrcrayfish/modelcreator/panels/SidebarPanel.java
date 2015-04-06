@@ -20,6 +20,8 @@ import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JTextField;
 import javax.swing.SpringLayout;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 
 import com.mrcrayfish.modelcreator.ModelCreator;
 import com.mrcrayfish.modelcreator.element.Element;
@@ -177,6 +179,17 @@ public class SidebarPanel extends JPanel implements ElementManager
 		tabbedPane.add("Faces", new FacePanel(this));
 		tabbedPane.setPreferredSize(new Dimension(190, 500));
 		tabbedPane.setTabPlacement(JTabbedPane.TOP);
+		tabbedPane.addChangeListener(new ChangeListener() {
+			@Override
+			public void stateChanged(ChangeEvent arg0)
+			{
+				if(tabbedPane.getSelectedIndex()==0) {
+					creator.setSidebar(ModelCreator.ELEMENT_SIDE_BAR);
+				} else if(tabbedPane.getSelectedIndex()==2) {
+					creator.setSidebar(ModelCreator.FACE_SIDE_BAR);
+				}
+			}
+		});
 		add(tabbedPane);
 		
 		boxAmbient = new JRadioButton("Ambient Occulusion");

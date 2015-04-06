@@ -39,6 +39,7 @@ import com.mrcrayfish.modelcreator.element.Element;
 import com.mrcrayfish.modelcreator.element.ElementManager;
 import com.mrcrayfish.modelcreator.panels.SidebarPanel;
 import com.mrcrayfish.modelcreator.sidebar.ElementSidebar;
+import com.mrcrayfish.modelcreator.sidebar.FaceSidebar;
 import com.mrcrayfish.modelcreator.sidebar.Sidebar;
 import com.mrcrayfish.modelcreator.texture.PendingTexture;
 import com.mrcrayfish.modelcreator.texture.TextureManager;
@@ -51,6 +52,7 @@ public class ModelCreator extends JFrame
 	public static String texturePath = ".";
 	
 	public static final Sidebar ELEMENT_SIDE_BAR = new ElementSidebar();
+	public static final Sidebar FACE_SIDE_BAR = new FaceSidebar();
 
 	// Canvas Variables
 	private final static AtomicReference<Dimension> newCanvasSize = new AtomicReference<Dimension>();
@@ -332,6 +334,16 @@ public class ModelCreator extends JFrame
 			glLoadIdentity();
 
 			drawOverlay();
+			
+			//Sidebar
+			glLineWidth(2F);
+			glColor3d(0.6, 0.6, 0.6);
+			glBegin(GL_LINES);
+			{
+				glVertex2i(offset, 0);
+				glVertex2i(offset, height);
+			}
+			glEnd();
 			if(sidebar!=null) {
 				sidebar.updateValues(manager, width, height, sidebarSize);
 				sidebar.draw(offset, font);
