@@ -154,12 +154,12 @@ public class Element
 		GL11.glPushMatrix();
 		{
 			GL11.glEnable(GL_CULL_FACE);
-			GL11.glTranslated(getOriginX(), getOriginY(), -getOriginZ());
+			GL11.glTranslated(getOriginX(), getOriginY(), getOriginZ());
 			rotateAxis();
-			GL11.glTranslated(-getOriginX(), -getOriginY(), getOriginZ());
+			GL11.glTranslated(-getOriginX(), -getOriginY(), -getOriginZ());
 			
 			//TODO - this is quite a hacky way of fixing the z coordinate, but it is the best I could come up
-			GL11.glTranslated(0, 0, -16+getStartZ()*2+getDepth());
+			GL11.glTranslated(0, 0, -16);
 			
 			// North
 			if (faces[0].isEnabled())

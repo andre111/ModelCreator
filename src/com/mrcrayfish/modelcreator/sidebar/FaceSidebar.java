@@ -330,6 +330,8 @@ public class FaceSidebar implements Sidebar
 							if(sidebarClickButton==0) {
 								sidebarClickedElement.getAllFaces()[5-side].addTextureX(offx);
 								sidebarClickedElement.getAllFaces()[5-side].addTextureY(offy);
+								sidebarClickedElement.getAllFaces()[5-side].addTextureXEnd(offx);
+								sidebarClickedElement.getAllFaces()[5-side].addTextureYEnd(offy);
 							} else {
 								sidebarClickedElement.getAllFaces()[5-side].addTextureXEnd(offx);
 								sidebarClickedElement.getAllFaces()[5-side].addTextureYEnd(offy);
