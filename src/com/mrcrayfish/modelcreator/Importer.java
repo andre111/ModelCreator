@@ -46,7 +46,7 @@ public class Importer
 			{
 				fr = new FileReader(path);
 				reader = new BufferedReader(fr);
-				readComponents(reader, manager);
+				readComponents(reader, manager, path.getParentFile());
 				reader.close();
 				fr.close();
 			}
@@ -57,7 +57,7 @@ public class Importer
 		}
 	}
 	
-	private void readComponents(BufferedReader reader, ElementManager manager) throws IOException {
+	private void readComponents(BufferedReader reader, ElementManager manager, File dir) throws IOException {
 		manager.clearElements();
 		
 		JsonParser parser = new JsonParser();
@@ -66,24 +66,31 @@ public class Importer
 		if(read.isJsonObject()) {
 			JsonObject obj = read.getAsJsonObject();
 			
-			//load textures
-			if(obj.has("textures") && obj.get("textures").isJsonObject()) {
-				JsonObject textures = obj.get("textures").getAsJsonObject();
-				
-				for(Entry<String, JsonElement> entry : textures.entrySet()) {
-					if(entry.getValue().isJsonPrimitive()) {
-						String texture = entry.getValue().getAsString();
-						textureMap.put(entry.getKey(), texture);
-						
-						if(new File(ModelCreator.texturePath+File.separator+texture+".png").exists()) {
-							manager.addPendingTexture(new PendingTexture(ModelCreator.texturePath+File.separator+texture+".png", new TextureCallback(){
-								@Override
-								public void callback(boolean success, String texture) {}
-							}));
-						}
-					}
+			if(obj.has("parent") && obj.get("parent").isJsonPrimitive()) {
+				String parent = obj.get("parent").getAsString();
+				File file = new File(dir, parent+".json");
+				if(!file.exists()) {
+					parent = parent.substring(parent.lastIndexOf('/')+1, parent.length());
+					file = new File(dir, parent+".json");
 				}
+				
+				if(file.exists()) {
+					//load textures
+					loadTextures(obj);
+					
+					//Load Parent
+					FileReader fr = new FileReader(file);
+					reader = new BufferedReader(fr);
+					readComponents(reader, manager, file.getParentFile());
+					reader.close();
+					fr.close();
+				}
+				
+				return;
 			}
+			
+			//load textures
+			loadTextures(obj);
 			
 			//load elements
 			if(obj.has("elements") && obj.get("elements").isJsonArray()) {
@@ -99,6 +106,32 @@ public class Importer
 			manager.setAmbientOcc(true);
 			if(obj.has("ambientocclusion") && obj.get("ambientocclusion").isJsonPrimitive()) {
 				manager.setAmbientOcc(obj.get("ambientocclusion").getAsBoolean());
+			}
+		}
+	}
+	
+	private void loadTextures(JsonObject obj) {
+		if(obj.has("textures") && obj.get("textures").isJsonObject()) {
+			JsonObject textures = obj.get("textures").getAsJsonObject();
+			
+			for(Entry<String, JsonElement> entry : textures.entrySet()) {
+				if(entry.getValue().isJsonPrimitive()) {
+					String texture = entry.getValue().getAsString();
+					
+					if(texture.startsWith("#")) {
+						textureMap.put(entry.getKey(), textureMap.get(texture.replaceFirst("#", "")));
+						System.out.println(entry.getKey()+" loaded "+texture+" -> "+textureMap.get(texture.replaceFirst("#", "")));
+					} else {
+						System.out.println(entry.getKey()+" loaded "+texture);
+						textureMap.put(entry.getKey(), texture);
+						if(new File(ModelCreator.texturePath+File.separator+texture+".png").exists()) {
+							manager.addPendingTexture(new PendingTexture(ModelCreator.texturePath+File.separator+texture+".png", new TextureCallback(){
+								@Override
+								public void callback(boolean success, String texture) {}
+							}));
+						}
+					}
+				}
 			}
 		}
 	}
@@ -162,7 +195,6 @@ public class Importer
 			
 			for(Face face : element.getAllFaces()) {
 				face.setEnabled(false);
-				face.setAutoUVEnabled(false);
 			}
 			
 			if(obj.has("faces") && obj.get("faces").isJsonObject()) {
@@ -190,7 +222,11 @@ public class Importer
 		if(face!=null) {
 			face.setEnabled(true);
 			
-			//TODO cullface,rotation,tintindex
+			//automatically set uv if not specified
+			face.setEndU(element.getFaceDimension(face.getSide()).getWidth());
+			face.setEndV(element.getFaceDimension(face.getSide()).getHeight());
+			face.setAutoUVEnabled(true);
+			
 			if(obj.has("uv") && obj.get("uv").isJsonArray()) {
 				JsonArray uv = obj.get("uv").getAsJsonArray();
 				
@@ -203,6 +239,7 @@ public class Importer
 				face.setStartV(vStart);
 				face.setEndU(uEnd);
 				face.setEndV(vEnd);
+				face.setAutoUVEnabled(false);
 			}
 			
 			if(obj.has("texture") && obj.get("texture").isJsonPrimitive()) {
@@ -221,6 +258,8 @@ public class Importer
 			if(obj.has("rotation") && obj.get("rotation").isJsonPrimitive()) {
 				face.setRotation(obj.get("rotation").getAsDouble());
 			}
+			
+			//TODO cullface,tintindex
 		}
 	}
 }
