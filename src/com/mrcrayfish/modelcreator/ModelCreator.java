@@ -174,6 +174,22 @@ public class ModelCreator extends JFrame
 				manager.updateValues();
 			}
 		});
+		
+		JMenuItem menuItemImport = new JMenuItem("Import");
+		menuItemImport.setMnemonic(KeyEvent.VK_I);
+		menuItemImport.setToolTipText("Import model from JSON");
+		menuItemImport.addActionListener(e ->
+		{
+			JFileChooser chooser = new JFileChooser();
+			chooser.setDialogTitle("Input File");
+			chooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
+			int returnVal = chooser.showOpenDialog(null);
+			if (returnVal == JFileChooser.APPROVE_OPTION)
+			{
+				Importer importer = new Importer(manager, chooser.getSelectedFile().getAbsolutePath());
+				importer.importFromJSON();
+			}
+		});
 
 		JMenuItem menuItemExport = new JMenuItem("Export");
 		menuItemExport.setMnemonic(KeyEvent.VK_E);
@@ -200,22 +216,6 @@ public class ModelCreator extends JFrame
 			System.exit(0);
 		});
 		
-		JMenuItem menuItemImport = new JMenuItem("Import");
-		menuItemImport.setMnemonic(KeyEvent.VK_I);
-		menuItemImport.setToolTipText("Import model from JSON");
-		menuItemImport.addActionListener(e ->
-		{
-			JFileChooser chooser = new JFileChooser();
-			chooser.setDialogTitle("Input File");
-			chooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
-			int returnVal = chooser.showOpenDialog(null);
-			if (returnVal == JFileChooser.APPROVE_OPTION)
-			{
-				Importer importer = new Importer(manager, chooser.getSelectedFile().getAbsolutePath());
-				importer.importFromJSON();
-			}
-		});
-		
 		JMenuItem menuItemTexturePath = new JMenuItem("Set Texture path");
 		menuItemTexturePath.setMnemonic(KeyEvent.VK_S);
 		menuItemTexturePath.setToolTipText("Set the base path from where to look for textures");
@@ -232,8 +232,8 @@ public class ModelCreator extends JFrame
 		});
 
 		file.add(menuItemNew);
-		file.add(menuItemExport);
 		file.add(menuItemImport);
+		file.add(menuItemExport);
 		file.add(menuItemTexturePath);
 		file.add(menuItemExit);
 		menuBar.add(file);
