@@ -93,8 +93,6 @@ public class ElementSidebar implements Sidebar
 	public void drawSideView(double x, double y, double size, int side, Font font) {
 		GL11.glPushMatrix();
 		{
-			GL11.glEnable(GL11.GL_BLEND);
-			GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
 			glTranslated(x, y, 0);
 			glLineWidth(2F);
 			
@@ -130,6 +128,8 @@ public class ElementSidebar implements Sidebar
 			}
 			
 			//Cubes
+			GL11.glEnable(GL11.GL_BLEND);
+			GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
 			for (int i = 0; i < manager.getCuboidCount(); i++)
 			{
 				Element cube = manager.getCuboid(i);
@@ -224,7 +224,6 @@ public class ElementSidebar implements Sidebar
 					glEnd();
 				}
 			}
-			
 			GL11.glDisable(GL11.GL_BLEND);
 		}
 		GL11.glPopMatrix();
