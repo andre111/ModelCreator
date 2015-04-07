@@ -141,11 +141,12 @@ public class Element
 		}
 	}
 
-	public void setAllTextures(String texture)
+	public void setAllTextures(String texture, String location)
 	{
 		for (Face face : faces)
 		{
 			face.setTexture(texture);
+			face.setTextureLocation(location);
 		}
 	}
 

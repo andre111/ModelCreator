@@ -64,7 +64,7 @@ public class TexturePanel extends JPanel implements TextureCallback
 			{
 				if ((e.getModifiers() & ActionEvent.SHIFT_MASK) == 1)
 				{
-					manager.getSelectedCuboid().setAllTextures(null);
+					manager.getSelectedCuboid().setAllTextures(null, "blocks/");
 				}
 				else
 				{
@@ -96,7 +96,7 @@ public class TexturePanel extends JPanel implements TextureCallback
 				{
 					if ((e.getModifiers() & ActionEvent.SHIFT_MASK) == 1)
 					{
-						manager.getSelectedCuboid().setAllTextures(texture.getTexture());
+						manager.getSelectedCuboid().setAllTextures(texture.getTexture(), texture.getTexture());
 					}
 					else
 					{
