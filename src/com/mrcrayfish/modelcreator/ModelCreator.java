@@ -25,6 +25,7 @@ import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
+import javax.swing.filechooser.FileNameExtensionFilter;
 
 import org.lwjgl.LWJGLException;
 import org.lwjgl.input.Keyboard;
@@ -183,6 +184,9 @@ public class ModelCreator extends JFrame
 			JFileChooser chooser = new JFileChooser();
 			chooser.setDialogTitle("Input File");
 			chooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
+			chooser.setApproveButtonText("Import");
+			FileNameExtensionFilter filter = new FileNameExtensionFilter("JSON (.json)", "json");
+			chooser.setFileFilter(filter);
 			int returnVal = chooser.showOpenDialog(null);
 			if (returnVal == JFileChooser.APPROVE_OPTION)
 			{
@@ -199,10 +203,18 @@ public class ModelCreator extends JFrame
 			JFileChooser chooser = new JFileChooser();
 			chooser.setDialogTitle("Output file");
 			chooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
+			chooser.setApproveButtonText("Export");
+			FileNameExtensionFilter filter = new FileNameExtensionFilter("JSON (.json)", "json");
+			chooser.setFileFilter(filter);
 			chooser.setSelectedFile(new File(chooser.getCurrentDirectory(), "output.json"));
 			int returnVal = chooser.showOpenDialog(null);
 			if (returnVal == JFileChooser.APPROVE_OPTION)
 			{
+				String filePath = chooser.getSelectedFile().getAbsolutePath();
+				if (!filePath.endsWith(".json"))
+				{
+					chooser.setSelectedFile(new File(filePath + ".json"));
+				}
 				Exporter exporter = new Exporter(manager);
 				exporter.export(chooser.getSelectedFile());
 			}
