@@ -163,42 +163,97 @@ public class Element
 			if (faces[0].isEnabled())
 			{
 				GL11.glColor3f(0, 1, 0);
-				faces[0].renderNorth();
+				faces[0].renderNorth(false, 0);
 			}
 
 			// East
 			if (faces[1].isEnabled())
 			{
 				GL11.glColor3f(0, 0, 1);
-				faces[1].renderEast();
+				faces[1].renderEast(false, 0);
 			}
 
 			// South
 			if (faces[2].isEnabled())
 			{
 				GL11.glColor3f(1, 0, 0);
-				faces[2].renderSouth();
+				faces[2].renderSouth(false, 0);
 			}
 
 			// West
 			if (faces[3].isEnabled())
 			{
 				GL11.glColor3f(1, 1, 0);
-				faces[3].renderWest();
+				faces[3].renderWest(false, 0);
 			}
 
 			// Top
 			if (faces[4].isEnabled())
 			{
 				GL11.glColor3f(0, 1, 1);
-				faces[4].renderUp();
+				faces[4].renderUp(false, 0);
 			}
 
 			// Bottom
 			if (faces[5].isEnabled())
 			{
 				GL11.glColor3f(1, 0, 1);
-				faces[5].renderDown();
+				faces[5].renderDown(false, 0);
+			}
+		}
+		GL11.glPopMatrix();
+	}
+	
+	public void drawGetPosition()
+	{
+		GL11.glPushMatrix();
+		{
+			GL11.glEnable(GL_CULL_FACE);
+			GL11.glTranslated(getOriginX(), getOriginY(), getOriginZ());
+			rotateAxis();
+			GL11.glTranslated(-getOriginX(), -getOriginY(), -getOriginZ());
+			
+			int namePos = 1;
+			// North
+			if (faces[0].isEnabled())
+			{
+				GL11.glColor3f(0, 1, 0);
+				namePos = faces[0].renderNorth(true, namePos);
+			}
+
+			// East
+			if (faces[1].isEnabled())
+			{
+				GL11.glColor3f(0, 0, 1);
+				namePos = faces[1].renderEast(true, namePos);
+			}
+
+			// South
+			if (faces[2].isEnabled())
+			{
+				GL11.glColor3f(1, 0, 0);
+				namePos = faces[2].renderSouth(true, namePos);
+			}
+
+			// West
+			if (faces[3].isEnabled())
+			{
+				GL11.glColor3f(1, 1, 0);
+				namePos = faces[3].renderWest(true, namePos);
+			}
+
+			// Top
+			if (faces[4].isEnabled())
+			{
+				GL11.glColor3f(0, 1, 1);
+				namePos = faces[4].renderUp(true, namePos);
+			}
+
+			// Bottom
+			if (faces[5].isEnabled())
+			{
+				GL11.glColor3f(1, 0, 1);
+				namePos = faces[5].renderDown(true, namePos);
 			}
 		}
 		GL11.glPopMatrix();

@@ -34,190 +34,490 @@ public class Face
 		this.side = side;
 	}
 
-	public void renderNorth()
+	public int renderNorth(boolean split, int namePos)
 	{
 		GL11.glPushMatrix();
 		{
 			startRender();
 
-			GL11.glBegin(GL11.GL_QUADS);
-			{
-				if (binded)
-					GL11.glTexCoord2d(fitTexture ? 0 : (textureU / 16), fitTexture ? 1 : (textureVEnd / 16));
-				GL11.glVertex3d(cuboid.getStartX() + cuboid.getWidth(), cuboid.getStartY(), cuboid.getStartZ());
-
-				if (binded)
-					GL11.glTexCoord2d(fitTexture ? 1 : (textureUEnd / 16), fitTexture ? 1 : (textureVEnd / 16));
-				GL11.glVertex3d(cuboid.getStartX(), cuboid.getStartY(), cuboid.getStartZ());
-
-				if (binded)
-					GL11.glTexCoord2d(fitTexture ? 1 : (textureUEnd / 16), fitTexture ? 0 : (textureV / 16));
-				GL11.glVertex3d(cuboid.getStartX(), cuboid.getStartY() + cuboid.getHeight(), cuboid.getStartZ());
-
-				if (binded)
-					GL11.glTexCoord2d(fitTexture ? 0 : (textureU / 16), fitTexture ? 0 : (textureV / 16));
-				GL11.glVertex3d(cuboid.getStartX() + cuboid.getWidth(), cuboid.getStartY() + cuboid.getHeight(), cuboid.getStartZ());
+			double splitX = 1;
+			double splitY = 1;
+			if(split) {
+				splitX = cuboid.getWidth();
+				splitY = cuboid.getHeight();
 			}
-			GL11.glEnd();
+			
+			for(int i=0; i<splitX; i++) {
+				for(int j=0; j<splitY; j++) {
+					double uStart = 0;
+					double uEnd = 1;
+					double vStart = 0;
+					double vEnd = 1;
+					
+					if(!fitTexture) {
+						uStart = textureU / 16;
+						uEnd = textureUEnd / 16;
+						vStart = textureV / 16;
+						vEnd = textureVEnd / 16;
+					}
+					
+					double uSize = (uEnd - uStart);
+					double vSize = (vEnd - vStart);
+					
+					uStart += (splitX-(i+1)) * uSize/splitX;
+					uEnd = uStart + (uSize / splitX);
+					vStart += (splitY-(j+1)) * vSize/splitY;
+					vEnd = vStart + (vSize / splitY);
+					
+					double xStart = cuboid.getStartX();
+					double xEnd = cuboid.getStartX() + cuboid.getWidth();
+					double yStart = cuboid.getStartY();
+					double yEnd = cuboid.getStartY() + cuboid.getHeight();
+					//double zStart = cuboid.getStartZ();
+					//double zEnd = cuboid.getStartZ() + cuboid.getDepth();
+					
+					double xSize = xEnd - xStart;
+					double ySize = yEnd - yStart;
+					//double zSize = zEnd - zStart;
+					
+					xStart += i * xSize/splitX;
+					xEnd = xStart + (xSize / splitX);
+					yStart += j * ySize/splitY;
+					yEnd = yStart + (ySize / splitY);
+					
+					if(split) {
+						GL11.glLoadName(namePos++);
+					}
+					GL11.glBegin(GL11.GL_QUADS);
+					{
+						if (binded)
+							GL11.glTexCoord2d(uStart, vEnd);
+						GL11.glVertex3d(xEnd, yStart, cuboid.getStartZ());
+		
+						if (binded)
+							GL11.glTexCoord2d(uEnd, vEnd);
+						GL11.glVertex3d(xStart, yStart, cuboid.getStartZ());
+		
+						if (binded)
+							GL11.glTexCoord2d(uEnd, vStart);
+						GL11.glVertex3d(xStart, yEnd, cuboid.getStartZ());
+		
+						if (binded)
+							GL11.glTexCoord2d(uStart, vStart);
+						GL11.glVertex3d(xEnd, yEnd, cuboid.getStartZ());
+					}
+					GL11.glEnd();
+				}
+			}
 
 			finishRender();
 		}
 		GL11.glPopMatrix();
+		
+		return namePos;
 	}
 
-	public void renderEast()
+	public int renderEast(boolean split, int namePos)
 	{
 		GL11.glPushMatrix();
 		{
 			startRender();
-
-			GL11.glBegin(GL11.GL_QUADS);
-			{
-				if (binded)
-					GL11.glTexCoord2d(fitTexture ? 0 : (textureU / 16), fitTexture ? 1 : (textureVEnd / 16));
-				GL11.glVertex3d(cuboid.getStartX() + cuboid.getWidth(), cuboid.getStartY(), cuboid.getStartZ() + cuboid.getDepth());
-
-				if (binded)
-					GL11.glTexCoord2d(fitTexture ? 1 : (textureUEnd / 16), fitTexture ? 1 : (textureVEnd / 16));
-				GL11.glVertex3d(cuboid.getStartX() + cuboid.getWidth(), cuboid.getStartY(), cuboid.getStartZ());
-
-				if (binded)
-					GL11.glTexCoord2d(fitTexture ? 1 : (textureUEnd / 16), fitTexture ? 0 : (textureV / 16));
-				GL11.glVertex3d(cuboid.getStartX() + cuboid.getWidth(), cuboid.getStartY() + cuboid.getHeight(), cuboid.getStartZ());
-
-				if (binded)
-					GL11.glTexCoord2d(fitTexture ? 0 : (textureU / 16), fitTexture ? 0 : (textureV / 16));
-				GL11.glVertex3d(cuboid.getStartX() + cuboid.getWidth(), cuboid.getStartY() + cuboid.getHeight(), cuboid.getStartZ() + cuboid.getDepth());
+			
+			double splitZ = 1;
+			double splitY = 1;
+			if(split) {
+				splitZ = cuboid.getWidth();
+				splitY = cuboid.getHeight();
 			}
-			GL11.glEnd();
+			
+			for(int i=0; i<splitZ; i++) {
+				for(int j=0; j<splitY; j++) {
+					double uStart = 0;
+					double uEnd = 1;
+					double vStart = 0;
+					double vEnd = 1;
+					
+					if(!fitTexture) {
+						uStart = textureU / 16;
+						uEnd = textureUEnd / 16;
+						vStart = textureV / 16;
+						vEnd = textureVEnd / 16;
+					}
+					
+					double uSize = (uEnd - uStart);
+					double vSize = (vEnd - vStart);
+					
+					uStart += (splitZ-(i+1)) * uSize/splitZ;
+					uEnd = uStart + (uSize / splitZ);
+					vStart += (splitY-(j+1)) * vSize/splitY;
+					vEnd = vStart + (vSize / splitY);
+					
+					double yStart = cuboid.getStartY();
+					double yEnd = cuboid.getStartY() + cuboid.getHeight();
+					double zStart = cuboid.getStartZ();
+					double zEnd = cuboid.getStartZ() + cuboid.getDepth();
+					
+					double ySize = yEnd - yStart;
+					double zSize = zEnd - zStart;
+					
+					zStart += i * zSize/splitZ;
+					zEnd = zStart + (zSize / splitZ);
+					yStart += j * ySize/splitY;
+					yEnd = yStart + (ySize / splitY);
+					
+					if(split) {
+						GL11.glLoadName(namePos++);
+					}
+					GL11.glBegin(GL11.GL_QUADS);
+					{
+						if (binded)
+							GL11.glTexCoord2d(uStart, vEnd);
+						GL11.glVertex3d(cuboid.getStartX() + cuboid.getWidth(), yStart, zEnd);
+		
+						if (binded)
+							GL11.glTexCoord2d(uEnd, vEnd);
+						GL11.glVertex3d(cuboid.getStartX() + cuboid.getWidth(), yStart, zStart);
+		
+						if (binded)
+							GL11.glTexCoord2d(uEnd, vStart);
+						GL11.glVertex3d(cuboid.getStartX() + cuboid.getWidth(), yEnd, zStart);
+		
+						if (binded)
+							GL11.glTexCoord2d(uStart, vStart);
+						GL11.glVertex3d(cuboid.getStartX() + cuboid.getWidth(), yEnd, zEnd);
+					}
+					GL11.glEnd();
+				}
+			}
 
 			finishRender();
 		}
 		GL11.glPopMatrix();
+		
+		return namePos;
 	}
 
-	public void renderSouth()
+	public int renderSouth(boolean split, int namePos)
 	{
 		GL11.glPushMatrix();
 		{
 			startRender();
 
-			GL11.glBegin(GL11.GL_QUADS);
-			{
-				if (binded)
-					GL11.glTexCoord2d(fitTexture ? 0 : (textureU / 16), fitTexture ? 1 : (textureVEnd / 16));
-				GL11.glVertex3d(cuboid.getStartX(), cuboid.getStartY(), cuboid.getStartZ() + cuboid.getDepth());
-
-				if (binded)
-					GL11.glTexCoord2d(fitTexture ? 1 : (textureUEnd / 16), fitTexture ? 1 : (textureVEnd / 16));
-				GL11.glVertex3d(cuboid.getStartX() + cuboid.getWidth(), cuboid.getStartY(), cuboid.getStartZ() + cuboid.getDepth());
-
-				if (binded)
-					GL11.glTexCoord2d(fitTexture ? 1 : (textureUEnd / 16), fitTexture ? 0 : (textureV / 16));
-				GL11.glVertex3d(cuboid.getStartX() + cuboid.getWidth(), cuboid.getStartY() + cuboid.getHeight(), cuboid.getStartZ() + cuboid.getDepth());
-
-				if (binded)
-					GL11.glTexCoord2d(fitTexture ? 0 : (textureU / 16), fitTexture ? 0 : (textureV / 16));
-				GL11.glVertex3d(cuboid.getStartX(), cuboid.getStartY() + cuboid.getHeight(), cuboid.getStartZ() + cuboid.getDepth());
+			double splitX = 1;
+			double splitY = 1;
+			if(split) {
+				splitX = cuboid.getWidth();
+				splitY = cuboid.getHeight();
 			}
-			GL11.glEnd();
+			
+			for(int i=0; i<splitX; i++) {
+				for(int j=0; j<splitY; j++) {
+					double uStart = 0;
+					double uEnd = 1;
+					double vStart = 0;
+					double vEnd = 1;
+					
+					if(!fitTexture) {
+						uStart = textureU / 16;
+						uEnd = textureUEnd / 16;
+						vStart = textureV / 16;
+						vEnd = textureVEnd / 16;
+					}
+					
+					double uSize = (uEnd - uStart);
+					double vSize = (vEnd - vStart);
+					
+					uStart += i * uSize/splitX;
+					uEnd = uStart + (uSize / splitX);
+					vStart += (splitY-(j+1)) * vSize/splitY;
+					vEnd = vStart + (vSize / splitY);
+					
+					double xStart = cuboid.getStartX();
+					double xEnd = cuboid.getStartX() + cuboid.getWidth();
+					double yStart = cuboid.getStartY();
+					double yEnd = cuboid.getStartY() + cuboid.getHeight();
+					//double zStart = cuboid.getStartZ();
+					//double zEnd = cuboid.getStartZ() + cuboid.getDepth();
+					
+					double xSize = xEnd - xStart;
+					double ySize = yEnd - yStart;
+					//double zSize = zEnd - zStart;
+					
+					xStart += i * xSize/splitX;
+					xEnd = xStart + (xSize / splitX);
+					yStart += j * ySize/splitY;
+					yEnd = yStart + (ySize / splitY);
+					
+					if(split) {
+						GL11.glLoadName(namePos++);
+					}
+					GL11.glBegin(GL11.GL_QUADS);
+					{
+						if (binded)
+							GL11.glTexCoord2d(uStart, vEnd);
+						GL11.glVertex3d(xStart, yStart, cuboid.getStartZ() + cuboid.getDepth());
+		
+						if (binded)
+							GL11.glTexCoord2d(uEnd, vEnd);
+						GL11.glVertex3d(xEnd, yStart, cuboid.getStartZ() + cuboid.getDepth());
+		
+						if (binded)
+							GL11.glTexCoord2d(uEnd, vStart);
+						GL11.glVertex3d(xEnd, yEnd, cuboid.getStartZ() + cuboid.getDepth());
+		
+						if (binded)
+							GL11.glTexCoord2d(uStart, vStart);
+						GL11.glVertex3d(xStart, yEnd, cuboid.getStartZ() + cuboid.getDepth());
+					}
+					GL11.glEnd();
+				}
+			}
 
 			finishRender();
 		}
 		GL11.glPopMatrix();
+		
+		return namePos;
 	}
 
-	public void renderWest()
+	public int renderWest(boolean split, int namePos)
 	{
 		GL11.glPushMatrix();
 		{
 			startRender();
 
-			GL11.glBegin(GL11.GL_QUADS);
-			{
-				if (binded)
-					GL11.glTexCoord2d(fitTexture ? 0 : (textureU / 16), fitTexture ? 1 : (textureVEnd / 16));
-				GL11.glVertex3d(cuboid.getStartX(), cuboid.getStartY(), cuboid.getStartZ());
-
-				if (binded)
-					GL11.glTexCoord2d(fitTexture ? 1 : (textureUEnd / 16), fitTexture ? 1 : (textureVEnd / 16));
-				GL11.glVertex3d(cuboid.getStartX(), cuboid.getStartY(), cuboid.getStartZ() + cuboid.getDepth());
-
-				if (binded)
-					GL11.glTexCoord2d(fitTexture ? 1 : (textureUEnd / 16), fitTexture ? 0 : (textureV / 16));
-				GL11.glVertex3d(cuboid.getStartX(), cuboid.getStartY() + cuboid.getHeight(), cuboid.getStartZ() + cuboid.getDepth());
-
-				if (binded)
-					GL11.glTexCoord2d(fitTexture ? 0 : (textureU / 16), fitTexture ? 0 : (textureV / 16));
-				GL11.glVertex3d(cuboid.getStartX(), cuboid.getStartY() + cuboid.getHeight(), cuboid.getStartZ());
+			double splitZ = 1;
+			double splitY = 1;
+			if(split) {
+				splitZ = cuboid.getWidth();
+				splitY = cuboid.getHeight();
 			}
-			GL11.glEnd();
+			
+			for(int i=0; i<splitZ; i++) {
+				for(int j=0; j<splitY; j++) {
+					double uStart = 0;
+					double uEnd = 1;
+					double vStart = 0;
+					double vEnd = 1;
+					
+					if(!fitTexture) {
+						uStart = textureU / 16;
+						uEnd = textureUEnd / 16;
+						vStart = textureV / 16;
+						vEnd = textureVEnd / 16;
+					}
+					
+					double uSize = (uEnd - uStart);
+					double vSize = (vEnd - vStart);
+					
+					uStart += i * uSize/splitZ;
+					uEnd = uStart + (uSize / splitZ);
+					vStart += (splitY-(j+1)) * vSize/splitY;
+					vEnd = vStart + (vSize / splitY);
+					
+					double yStart = cuboid.getStartY();
+					double yEnd = cuboid.getStartY() + cuboid.getHeight();
+					double zStart = cuboid.getStartZ();
+					double zEnd = cuboid.getStartZ() + cuboid.getDepth();
+					
+					double ySize = yEnd - yStart;
+					double zSize = zEnd - zStart;
+					
+					zStart += i * zSize/splitZ;
+					zEnd = zStart + (zSize / splitZ);
+					yStart += j * ySize/splitY;
+					yEnd = yStart + (ySize / splitY);
+					
+					if(split) {
+						GL11.glLoadName(namePos++);
+					}
+					GL11.glBegin(GL11.GL_QUADS);
+					{
+						if (binded)
+							GL11.glTexCoord2d(uStart, vEnd);
+						GL11.glVertex3d(cuboid.getStartX(), yStart, zStart);
+		
+						if (binded)
+							GL11.glTexCoord2d(uEnd, vEnd);
+						GL11.glVertex3d(cuboid.getStartX(), yStart, zEnd);
+		
+						if (binded)
+							GL11.glTexCoord2d(uEnd, vStart);
+						GL11.glVertex3d(cuboid.getStartX(), yEnd, zEnd);
+		
+						if (binded)
+							GL11.glTexCoord2d(uStart, vStart);
+						GL11.glVertex3d(cuboid.getStartX(), yEnd, zStart);
+					}
+					GL11.glEnd();
+				}
+			}
 
 			finishRender();
 		}
 		GL11.glPopMatrix();
+		
+		return namePos;
 	}
 
-	public void renderUp()
+	public int renderUp(boolean split, int namePos)
 	{
 		GL11.glPushMatrix();
 		{
 			startRender();
-
-			GL11.glBegin(GL11.GL_QUADS);
-			{
-				if (binded)
-					GL11.glTexCoord2d(fitTexture ? 0 : (textureU / 16), fitTexture ? 1 : (textureVEnd / 16));
-				GL11.glVertex3d(cuboid.getStartX(), cuboid.getStartY() + cuboid.getHeight(), cuboid.getStartZ() + cuboid.getDepth());
-
-				if (binded)
-					GL11.glTexCoord2d(fitTexture ? 1 : (textureUEnd / 16), fitTexture ? 1 : (textureVEnd / 16));
-				GL11.glVertex3d(cuboid.getStartX() + cuboid.getWidth(), cuboid.getStartY() + cuboid.getHeight(), cuboid.getStartZ() + cuboid.getDepth());
-
-				if (binded)
-					GL11.glTexCoord2d(fitTexture ? 1 : (textureUEnd / 16), fitTexture ? 0 : (textureV / 16));
-				GL11.glVertex3d(cuboid.getStartX() + cuboid.getWidth(), cuboid.getStartY() + cuboid.getHeight(), cuboid.getStartZ());
-
-				if (binded)
-					GL11.glTexCoord2d(fitTexture ? 0 : (textureU / 16), fitTexture ? 0 : (textureV / 16));
-				GL11.glVertex3d(cuboid.getStartX(), cuboid.getStartY() + cuboid.getHeight(), cuboid.getStartZ());
+			
+			double splitX = 1;
+			double splitZ = 1;
+			if(split) {
+				splitX = cuboid.getWidth();
+				splitZ = cuboid.getDepth();
 			}
-			GL11.glEnd();
+			
+			for(int i=0; i<splitX; i++) {
+				for(int j=0; j<splitZ; j++) {
+					double uStart = 0;
+					double uEnd = 1;
+					double vStart = 0;
+					double vEnd = 1;
+					
+					if(!fitTexture) {
+						uStart = textureU / 16;
+						uEnd = textureUEnd / 16;
+						vStart = textureV / 16;
+						vEnd = textureVEnd / 16;
+					}
+					
+					double uSize = (uEnd - uStart);
+					double vSize = (vEnd - vStart);
+					
+					uStart += i * uSize/splitX;
+					uEnd = uStart + (uSize / splitX);
+					vStart += j * vSize/splitZ;
+					vEnd = vStart + (vSize / splitZ);
+					
+					double xStart = cuboid.getStartX();
+					double xEnd = cuboid.getStartX() + cuboid.getWidth();
+					double zStart = cuboid.getStartZ();
+					double zEnd = cuboid.getStartZ() + cuboid.getDepth();
+					
+					double xSize = xEnd - xStart;
+					double zSize = zEnd - zStart;
+					
+					xStart += i * xSize/splitX;
+					xEnd = xStart + (xSize / splitX);
+					zStart += j * zSize/splitZ;
+					zEnd = zStart + (zSize / splitZ);
+					
+					if(split) {
+						GL11.glLoadName(namePos++);
+					}
+					GL11.glBegin(GL11.GL_QUADS);
+					{
+						if (binded)
+							GL11.glTexCoord2d(uStart, vEnd);
+						GL11.glVertex3d(xStart, cuboid.getStartY() + cuboid.getHeight(), zEnd);
+		
+						if (binded)
+							GL11.glTexCoord2d(uEnd, vEnd);
+						GL11.glVertex3d(xEnd, cuboid.getStartY() + cuboid.getHeight(), zEnd);
+		
+						if (binded)
+							GL11.glTexCoord2d(uEnd, vStart);
+						GL11.glVertex3d(xEnd, cuboid.getStartY() + cuboid.getHeight(), zStart);
+		
+						if (binded)
+							GL11.glTexCoord2d(uStart, vStart);
+						GL11.glVertex3d(xStart, cuboid.getStartY() + cuboid.getHeight(), zStart);
+					}
+					GL11.glEnd();
+				}
+			}
 
 			finishRender();
 		}
 		GL11.glPopMatrix();
+		
+		return namePos;
 	}
 
-	public void renderDown()
+	public int renderDown(boolean split, int namePos)
 	{
 		GL11.glPushMatrix();
 		{
 			startRender();
-
-			GL11.glBegin(GL11.GL_QUADS);
-			{
-				if (binded)
-					GL11.glTexCoord2d(fitTexture ? 0 : (textureU / 16), fitTexture ? 1 : (textureVEnd / 16));
-				GL11.glVertex3d(cuboid.getStartX(), cuboid.getStartY(), cuboid.getStartZ());
-
-				if (binded)
-					GL11.glTexCoord2d(fitTexture ? 1 : (textureUEnd / 16), fitTexture ? 1 : (textureVEnd / 16));
-				GL11.glVertex3d(cuboid.getStartX() + cuboid.getWidth(), cuboid.getStartY(), cuboid.getStartZ());
-
-				if (binded)
-					GL11.glTexCoord2d(fitTexture ? 1 : (textureUEnd / 16), fitTexture ? 0 : (textureV / 16));
-				GL11.glVertex3d(cuboid.getStartX() + cuboid.getWidth(), cuboid.getStartY(), cuboid.getStartZ() + cuboid.getDepth());
-
-				if (binded)
-					GL11.glTexCoord2d(fitTexture ? 0 : (textureU / 16), fitTexture ? 0 : (textureV / 16));
-				GL11.glVertex3d(cuboid.getStartX(), cuboid.getStartY(), cuboid.getStartZ() + cuboid.getDepth());
+			
+			double splitX = 1;
+			double splitZ = 1;
+			if(split) {
+				splitX = cuboid.getWidth();
+				splitZ = cuboid.getDepth();
 			}
-			GL11.glEnd();
+			
+			for(int i=0; i<splitX; i++) {
+				for(int j=0; j<splitZ; j++) {
+					double uStart = 0;
+					double uEnd = 1;
+					double vStart = 0;
+					double vEnd = 1;
+					
+					if(!fitTexture) {
+						uStart = textureU / 16;
+						uEnd = textureUEnd / 16;
+						vStart = textureV / 16;
+						vEnd = textureVEnd / 16;
+					}
+					
+					double uSize = (uEnd - uStart);
+					double vSize = (vEnd - vStart);
+					
+					uStart += i * uSize/splitX;
+					uEnd = uStart + (uSize / splitX);
+					vStart += j * vSize/splitZ;
+					vEnd = vStart + (vSize / splitZ);
+					
+					double xStart = cuboid.getStartX();
+					double xEnd = cuboid.getStartX() + cuboid.getWidth();
+					double zStart = cuboid.getStartZ();
+					double zEnd = cuboid.getStartZ() + cuboid.getDepth();
+					
+					double xSize = xEnd - xStart;
+					double zSize = zEnd - zStart;
+					
+					xStart += i * xSize/splitX;
+					xEnd = xStart + (xSize / splitX);
+					zStart += (zSize-(j+1)) * zSize/splitZ;
+					zEnd = zStart + (zSize / splitZ);
+					
+					if(split) {
+						GL11.glLoadName(namePos++);
+					}
+					GL11.glBegin(GL11.GL_QUADS);
+					{
+						if (binded)
+							GL11.glTexCoord2d(uStart, vEnd);
+						GL11.glVertex3d(xStart, cuboid.getStartY(), zStart);
+		
+						if (binded)
+							GL11.glTexCoord2d(uEnd, vEnd);
+						GL11.glVertex3d(xEnd, cuboid.getStartY(), zStart);
+		
+						if (binded)
+							GL11.glTexCoord2d(uEnd, vStart);
+						GL11.glVertex3d(xEnd, cuboid.getStartY(), zEnd);
+		
+						if (binded)
+							GL11.glTexCoord2d(uStart, vStart);
+						GL11.glVertex3d(xStart, cuboid.getStartY(), zEnd);
+					}
+					GL11.glEnd();
+				}
+			}
 
 			finishRender();
 		}
 		GL11.glPopMatrix();
+		
+		return namePos;
 	}
 
 	public void startRender()

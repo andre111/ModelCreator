@@ -381,6 +381,23 @@ public class ModelCreator extends JFrame
 
 		drawPerspective();
 	}
+	
+	public void drawCubeGetPixel(int cube) {
+		glMatrixMode(GL_MODELVIEW);
+		glLoadIdentity();
+		glEnable(GL_DEPTH_TEST);
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+		glLoadIdentity();
+		camera.useView();
+
+		glTranslatef(-8, 0, -8);
+		for (int i = 0; i < manager.getCuboidCount(); i++)
+		{
+			if(i==cube) {
+				manager.getCuboid(i).drawGetPosition();
+			}
+		}
+	}
 
 	public void drawPerspective()
 	{
@@ -501,7 +518,7 @@ public class ModelCreator extends JFrame
 			{
 				if(grabbed==null) {
 					if(Mouse.isButtonDown(0) | Mouse.isButtonDown(1)) {
-						int sel = select(Mouse.getX(), Mouse.getY());
+						int sel = select(Mouse.getX(), Mouse.getY(), false, -1);
 						if(sel>=0) {
 							grabbed = manager.getAllCuboids().get(sel);
 							manager.setSelectedCuboid(sel);
@@ -614,7 +631,14 @@ public class ModelCreator extends JFrame
 			{
 				if(Keyboard.isKeyDown(Keyboard.KEY_LSHIFT)) {
 					if(Mouse.isButtonDown(0)) {
-						select(Mouse.getX(), Mouse.getY());
+						int cube = select(Mouse.getX(), Mouse.getY(), false, -1);
+						if(cube>=0) {
+							int pixel = select(Mouse.getX(), Mouse.getY(), true, cube);
+							
+							if(pixel>=0) {
+								System.out.println("Clicked cube "+cube+" pixel "+pixel);
+							}
+						}
 					}
 				} else {
 					if (Mouse.isButtonDown(0))
@@ -641,7 +665,7 @@ public class ModelCreator extends JFrame
 		}
 	}
 	
-	public int select(int x, int y) {
+	public int select(int x, int y, boolean getPixel, int cube) {
 		IntBuffer selBuffer = ByteBuffer.allocateDirect(1024).order(ByteOrder.nativeOrder()).asIntBuffer();
 		int[] buffer = new int[256];
 		
@@ -665,7 +689,11 @@ public class ModelCreator extends JFrame
 			GLU.gluPickMatrix(x, y, 1, 1, IntBuffer.wrap(viewport));
 			GLU.gluPerspective(60F, (float) (width-offset) / (float) height, 0.3F, 1000F);
 			
-			draw();
+			if(getPixel) {
+				drawCubeGetPixel(cube);
+			} else {
+				draw();
+			}
 		}
 		GL11.glPopMatrix();
 		hits = GL11.glRenderMode(GL11.GL_RENDER);
