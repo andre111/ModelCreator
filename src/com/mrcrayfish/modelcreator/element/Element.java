@@ -3,6 +3,9 @@ package com.mrcrayfish.modelcreator.element;
 import static org.lwjgl.opengl.GL11.GL_CULL_FACE;
 import static org.lwjgl.opengl.GL11.GL_LINES;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.util.glu.Sphere;
 
@@ -158,7 +161,7 @@ public class Element
 			GL11.glTranslated(getOriginX(), getOriginY(), getOriginZ());
 			rotateAxis();
 			GL11.glTranslated(-getOriginX(), -getOriginY(), -getOriginZ());
-			
+
 			// North
 			if (faces[0].isEnabled())
 			{
@@ -203,7 +206,7 @@ public class Element
 		}
 		GL11.glPopMatrix();
 	}
-	
+
 	public void drawGetPosition()
 	{
 		GL11.glPushMatrix();
@@ -212,7 +215,7 @@ public class Element
 			GL11.glTranslated(getOriginX(), getOriginY(), getOriginZ());
 			rotateAxis();
 			GL11.glTranslated(-getOriginX(), -getOriginY(), -getOriginZ());
-			
+
 			int namePos = 1;
 			// North
 			if (faces[0].isEnabled())
@@ -288,6 +291,94 @@ public class Element
 		}
 	}
 
+	public List<Element> getElementsWithRemovedPixel(int pixel) {
+		int side = 0;
+		for(int i=0; i<6; i++) {
+			FaceDimension dim = getFaceDimension(i);
+			if(pixel>=dim.getWidth()*dim.getHeight()) {
+				pixel -= dim.getWidth()*dim.getHeight();
+				side = i+1;
+			} else {
+				break;
+			}
+		}
+
+		List<Element> list = new ArrayList<Element>();
+		
+		switch(side) {
+		//north
+		case 0: {
+			if(depth>1) {
+				Element e = new Element(width, height, depth-1);
+				e.setStartX(startX);
+				e.setStartY(startY);
+				e.setStartZ(startZ+1);
+				list.add(e);
+			}
+			int right = pixel/(int) Math.ceil(height);
+			int below = pixel - (int) Math.floor(right * height);
+			double top = height - below - 1;
+			double left = width - right - 1;
+			
+			if(right>0) {
+				Element e = new Element(right, height, 1);
+				e.setStartX(startX);
+				e.setStartY(startY);
+				e.setStartZ(startZ);
+				list.add(e);
+			}
+			
+			if(below>0) {
+				Element e = new Element(1, below, 1);
+				e.setStartX(startX+right);
+				e.setStartY(startY);
+				e.setStartZ(startZ);
+				list.add(e);
+			}
+			
+			if(top>0) {
+				Element e = new Element(1, top, 1);
+				e.setStartX(startX+right);
+				e.setStartY(startY+below+1);
+				e.setStartZ(startZ);
+				list.add(e);
+			}
+			
+			if(left>0) {
+				Element e = new Element(left, height, 1);
+				e.setStartX(startX+right+1);
+				e.setStartY(startY);
+				e.setStartZ(startZ);
+				list.add(e);
+			}
+			
+			break;
+		}
+		//east
+		case 1: {
+			break;
+		}
+		//south
+		case 2: {
+			break;
+		}
+		//west
+		case 3: {
+			break;
+		}
+		//up
+		case 4: {
+			break;
+		}
+		//down
+		case 5: {
+			break;
+		}
+		}
+		
+		return list;
+	}
+
 	public void addStartX(double amt)
 	{
 		this.startX += amt;
@@ -317,7 +408,7 @@ public class Element
 	{
 		return startZ;
 	}
-	
+
 	public void setStartX(double amt)
 	{
 		this.startX = amt;
@@ -377,12 +468,12 @@ public class Element
 	{
 		return originZ;
 	}
-	
+
 	public void addOriginX(double amt)
 	{
 		this.originX += amt;
 	}
-	
+
 	public void addOriginY(double amt)
 	{
 		this.originY += amt;
@@ -397,7 +488,7 @@ public class Element
 	{
 		this.originX = amt;
 	}
-	
+
 	public void setOriginY(double amt)
 	{
 		this.originY = amt;
@@ -407,7 +498,7 @@ public class Element
 	{
 		this.originZ = amt;
 	}
-	
+
 	public double getRotation()
 	{
 		return rotation;
@@ -458,7 +549,7 @@ public class Element
 	{
 		return name;
 	}
-	
+
 	public void updateUV() {
 		for(Face face : faces) {
 			face.updateUV();
@@ -494,7 +585,7 @@ public class Element
 		}
 		return "x";
 	}
-	
+
 	public static int parseAxisString(String axis)
 	{
 		switch (axis)

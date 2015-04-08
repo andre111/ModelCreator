@@ -484,6 +484,7 @@ public class ModelCreator extends JFrame
 	private int lastMouseX, lastMouseY;
 	private boolean grabbing = false;
 	private Element grabbed = null;
+	private boolean removed = false;
 	public void handleInput()
 	{
 		final float cameraMod = Math.abs(camera.getZ());
@@ -631,14 +632,20 @@ public class ModelCreator extends JFrame
 			{
 				if(Keyboard.isKeyDown(Keyboard.KEY_LSHIFT)) {
 					if(Mouse.isButtonDown(0)) {
-						int cube = select(Mouse.getX(), Mouse.getY(), false, -1);
-						if(cube>=0) {
-							int pixel = select(Mouse.getX(), Mouse.getY(), true, cube);
-							
-							if(pixel>=0) {
-								System.out.println("Clicked cube "+cube+" pixel "+pixel);
+						if(!removed) {
+							removed = true;
+							int cube = select(Mouse.getX(), Mouse.getY(), false, -1);
+							if(cube>=0) {
+								int pixel = select(Mouse.getX(), Mouse.getY(), true, cube);
+								
+								if(pixel>=0) {
+									System.out.println("Clicked cube "+cube+" pixel "+pixel);
+									removePixel(cube, pixel);
+								}
 							}
 						}
+					} else {
+						removed = false;
 					}
 				} else {
 					if (Mouse.isButtonDown(0))
@@ -704,7 +711,7 @@ public class ModelCreator extends JFrame
 			int depth = buffer[1];
 			
 			for(int i=1; i<hits; i++) {
-				if((buffer[i+4+1]<depth || choose==0) && buffer[i*4+3]!=0) {
+				if((buffer[i*4+1]<depth || choose==0) && buffer[i*4+3]!=0) {
 					choose = buffer[i*4+3];
 					depth = buffer[i*4+1];
 				}
@@ -716,6 +723,16 @@ public class ModelCreator extends JFrame
 		}
 		
 		return -1;
+	}
+	
+	private void removePixel(int cube, int pixel) {
+		Element element = manager.getAllCuboids().get(cube);
+		List<Element> removedPixel = element.getElementsWithRemovedPixel(pixel);
+		
+		manager.removeElement(cube);
+		for(Element e : removedPixel) {
+			manager.addElement(e);
+		}
 	}
 
 	public float applyLimit(float value)

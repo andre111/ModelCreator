@@ -303,4 +303,10 @@ public class SidebarPanel extends JPanel implements ElementManager
 	{
 		model.addElement(e);
 	}
+
+	@Override
+	public void removeElement(int pos)
+	{
+		model.remove(pos);
+	}
 }
