@@ -126,7 +126,7 @@ public class Face
 			double splitZ = 1;
 			double splitY = 1;
 			if(split) {
-				splitZ = cuboid.getWidth();
+				splitZ = cuboid.getDepth();
 				splitY = cuboid.getHeight();
 			}
 			
@@ -289,7 +289,7 @@ public class Face
 			double splitZ = 1;
 			double splitY = 1;
 			if(split) {
-				splitZ = cuboid.getWidth();
+				splitZ = cuboid.getDepth();
 				splitY = cuboid.getHeight();
 			}
 			

@@ -52,6 +52,7 @@ import com.mrcrayfish.modelcreator.sidebar.Sidebar;
 import com.mrcrayfish.modelcreator.texture.PendingTexture;
 import com.mrcrayfish.modelcreator.texture.TextureManager;
 
+//NOW WORKING AGAIN(NO UV SUPPORT AS OF NOW):
 //WARNING: THIS BRANCH IS COMPLETTLY BUGGED FROM THE ATTEMPT TO ENABLE SINGLE PIXEL REMOVAL
 //			ONLY THE NORTH SIDE IS IMPLEMENTED AND WORKS
 //			EAST IS IMPLEMENTED BUT DOESNT WORK AT ALL

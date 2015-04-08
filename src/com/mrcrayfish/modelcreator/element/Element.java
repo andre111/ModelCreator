@@ -404,37 +404,199 @@ public class Element
 		}
 		//south
 		case 2: {
-			int right = pixel/(int) Math.ceil(height);
-			int below = pixel - (int) Math.floor(right * height);
+			if(depth>1) {
+				Element e = new Element(width, height, depth-1);
+				e.setStartX(startX);
+				e.setStartY(startY);
+				e.setStartZ(startZ);
+				list.add(e);
+			}
+			int left = pixel/(int) Math.ceil(height);
+			int below = pixel - (int) Math.floor(left * height);
 			double top = height - below - 1;
-			double left = width - right - 1;
+			double right = width - left - 1;
+			
+			if(right>0) {
+				Element e = new Element(right, height, 1);
+				e.setStartX(startX+left+1);
+				e.setStartY(startY);
+				e.setStartZ(startZ+depth-1);
+				list.add(e);
+			}
+			
+			if(below>0) {
+				Element e = new Element(1, below, 1);
+				e.setStartX(startX+left);
+				e.setStartY(startY);
+				e.setStartZ(startZ+depth-1);
+				list.add(e);
+			}
+			
+			if(top>0) {
+				Element e = new Element(1, top, 1);
+				e.setStartX(startX+left);
+				e.setStartY(startY+below+1);
+				e.setStartZ(startZ+depth-1);
+				list.add(e);
+			}
+			
+			if(left>0) {
+				Element e = new Element(left, height, 1);
+				e.setStartX(startX);
+				e.setStartY(startY);
+				e.setStartZ(startZ+depth-1);
+				list.add(e);
+			}
 			
 			break;
 		}
 		//west
 		case 3: {
-			int right = pixel/(int) Math.ceil(height);
-			int below = pixel - (int) Math.floor(right * height);
+			if(width>1) {
+				Element e = new Element(width-1, height, depth);
+				e.setStartX(startX+1);
+				e.setStartY(startY);
+				e.setStartZ(startZ);
+				list.add(e);
+			}
+			int left = pixel/(int) Math.ceil(height);
+			int below = pixel - (int) Math.floor(left * height);
 			double top = height - below - 1;
-			double left = depth - right - 1;
+			double right = depth - left - 1;
+			
+			if(right>0) {
+				Element e = new Element(1, height, right);
+				e.setStartX(startX);
+				e.setStartY(startY);
+				e.setStartZ(startZ+left+1);
+				list.add(e);
+			}
+			
+			if(below>0) {
+				Element e = new Element(1, below, 1);
+				e.setStartX(startX);
+				e.setStartY(startY);
+				e.setStartZ(startZ+left);
+				list.add(e);
+			}
+			
+			if(top>0) {
+				Element e = new Element(1, top, 1);
+				e.setStartX(startX);
+				e.setStartY(startY+below+1);
+				e.setStartZ(startZ+left);
+				list.add(e);
+			}
+			
+			if(left>0) {
+				Element e = new Element(1, height, left);
+				e.setStartX(startX);
+				e.setStartY(startY);
+				e.setStartZ(startZ);
+				list.add(e);
+			}
 			
 			break;
 		}
 		//up
 		case 4: {
-			int right = pixel/(int) Math.ceil(height);
-			int below = pixel - (int) Math.floor(right * height);
-			double top = width - below - 1;
-			double left = depth - right - 1;
+			if(height>1) {
+				Element e = new Element(width, height-1, depth);
+				e.setStartX(startX);
+				e.setStartY(startY);
+				e.setStartZ(startZ);
+				list.add(e);
+			}
+			int right = pixel/(int) Math.ceil(depth);
+			int below = pixel - (int) Math.floor(right * depth);
+			double top = depth - below - 1;
+			double left = width - right - 1;
+			
+			if(right>0) {
+				Element e = new Element(right, 1, depth);
+				e.setStartX(startX);
+				e.setStartY(startY+height-1);
+				e.setStartZ(startZ);
+				list.add(e);
+			}
+			
+			if(below>0) {
+				Element e = new Element(1, 1, below);
+				e.setStartX(startX+right);
+				e.setStartY(startY+height-1);
+				e.setStartZ(startZ);
+				list.add(e);
+			}
+			
+			if(top>0) {
+				Element e = new Element(1, 1, top);
+				e.setStartX(startX+right);
+				e.setStartY(startY+height-1);
+				e.setStartZ(startZ+below+1);
+				list.add(e);
+			}
+			
+			if(left>0) {
+				Element e = new Element(left, 1, depth);
+				e.setStartX(startX+right+1);
+				e.setStartY(startY+height-1);
+				e.setStartZ(startZ);
+				list.add(e);
+			}
+			
+			System.out.println(pixel);
+			//list.add(this);
 			
 			break;
 		}
 		//down
 		case 5: {
-			int right = pixel/(int) Math.ceil(height);
-			int below = pixel - (int) Math.floor(right * height);
-			double top = width - below - 1;
-			double left = depth - right - 1;
+			if(height>1) {
+				Element e = new Element(width, height-1, depth);
+				e.setStartX(startX);
+				e.setStartY(startY+1);
+				e.setStartZ(startZ);
+				list.add(e);
+			}
+			int right = pixel/(int) Math.ceil(depth);
+			int below = pixel - (int) Math.floor(right * depth);
+			double top = depth - below - 1;
+			double left = width - right - 1;
+			
+			if(right>0) {
+				Element e = new Element(right, 1, depth);
+				e.setStartX(startX);
+				e.setStartY(startY);
+				e.setStartZ(startZ);
+				list.add(e);
+			}
+			
+			if(below>0) {
+				Element e = new Element(1, 1, below);
+				e.setStartX(startX+right);
+				e.setStartY(startY);
+				e.setStartZ(startZ);
+				list.add(e);
+			}
+			
+			if(top>0) {
+				Element e = new Element(1, 1, top);
+				e.setStartX(startX+right);
+				e.setStartY(startY);
+				e.setStartZ(startZ+below+1);
+				list.add(e);
+			}
+			
+			if(left>0) {
+				Element e = new Element(left, 1, depth);
+				e.setStartX(startX+right+1);
+				e.setStartY(startY);
+				e.setStartZ(startZ);
+				list.add(e);
+			}
+			
+			System.out.println(pixel);
+			//list.add(this);
 			
 			break;
 		}
