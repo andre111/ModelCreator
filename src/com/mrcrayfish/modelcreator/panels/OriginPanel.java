@@ -92,7 +92,8 @@ public class OriginPanel extends JPanel implements IValueUpdater
 		});
 		btnPlusX.setPreferredSize(new Dimension(62, 30));
 		btnPlusX.setFont(defaultFont);
-
+		btnPlusX.setToolTipText("<html>Increases the X origin.<br><b>Hold shift for decimals</b></html>");
+		 
 		btnPlusY.addActionListener(e ->
 		{
 			if (manager.getSelectedCuboid() != null)
@@ -111,7 +112,8 @@ public class OriginPanel extends JPanel implements IValueUpdater
 		});
 		btnPlusY.setPreferredSize(new Dimension(62, 30));
 		btnPlusY.setFont(defaultFont);
-
+		btnPlusY.setToolTipText("<html>Increases the Y origin.<br><b>Hold shift for decimals</b></html>");
+		 
 		btnPlusZ.addActionListener(e ->
 		{
 			if (manager.getSelectedCuboid() != null)
@@ -130,7 +132,8 @@ public class OriginPanel extends JPanel implements IValueUpdater
 		});
 		btnPlusZ.setPreferredSize(new Dimension(62, 30));
 		btnPlusZ.setFont(defaultFont);
-
+		btnPlusZ.setToolTipText("<html>Increases the Z origin.<br><b>Hold shift for decimals</b></html>");
+		 
 		btnNegX.addActionListener(e ->
 		{
 			if (manager.getSelectedCuboid() != null)
@@ -149,7 +152,8 @@ public class OriginPanel extends JPanel implements IValueUpdater
 		});
 		btnNegX.setPreferredSize(new Dimension(62, 30));
 		btnNegX.setFont(defaultFont);
-
+		btnNegX.setToolTipText("<html>Decreases the X origin.<br><b>Hold shift for decimals</b></html>");
+		 
 		btnNegY.addActionListener(e ->
 		{
 			if (manager.getSelectedCuboid() != null)
@@ -168,7 +172,8 @@ public class OriginPanel extends JPanel implements IValueUpdater
 		});
 		btnNegY.setPreferredSize(new Dimension(62, 30));
 		btnNegY.setFont(defaultFont);
-
+		btnNegY.setToolTipText("<html>Decreases the Y origin.<br><b>Hold shift for decimals</b></html>");
+		 
 		btnNegZ.addActionListener(e ->
 		{
 			if (manager.getSelectedCuboid() != null)
@@ -187,6 +192,7 @@ public class OriginPanel extends JPanel implements IValueUpdater
 		});
 		btnNegZ.setPreferredSize(new Dimension(62, 30));
 		btnNegZ.setFont(defaultFont);
+		btnNegZ.setToolTipText("<html>Decreases the Z origin.<br><b>Hold shift for decimals</b></html>");
 	}
 
 	public void addComponents()

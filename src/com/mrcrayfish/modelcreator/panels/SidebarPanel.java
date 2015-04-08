@@ -77,6 +77,7 @@ public class SidebarPanel extends JPanel implements ElementManager
 			e.printStackTrace();
 		}
 
+		btnAdd.setToolTipText("New Element");
 		btnAdd.addActionListener(e ->
 		{
 			model.addElement(new Element(1, 1, 1));
@@ -95,6 +96,7 @@ public class SidebarPanel extends JPanel implements ElementManager
 			e.printStackTrace();
 		}
 
+		btnRemove.setToolTipText("Remove Element");
 		btnRemove.addActionListener(e ->
 		{
 			int selected = list.getSelectedIndex();
@@ -120,6 +122,7 @@ public class SidebarPanel extends JPanel implements ElementManager
 			e.printStackTrace();
 		}
 
+		btnDuplicate.setToolTipText("Duplicate Element");
 		btnDuplicate.addActionListener(e ->
 		{
 			int selected = list.getSelectedIndex();
@@ -135,7 +138,7 @@ public class SidebarPanel extends JPanel implements ElementManager
 		add(btnContainer);
 
 		name.setPreferredSize(new Dimension(190, 30));
-		name.setToolTipText("Placeholder");
+		name.setToolTipText("Element Name");
 		name.setEnabled(false);
 		name.addKeyListener(new KeyAdapter()
 		{
@@ -195,6 +198,7 @@ public class SidebarPanel extends JPanel implements ElementManager
 		boxAmbient = new JRadioButton("Ambient Occulusion");
 		boxAmbient.setSelected(true);
 		boxAmbient.addActionListener(a -> ambientOcc = boxAmbient.isSelected());
+		boxAmbient.setToolTipText("Determine the light for each element");
 		add(boxAmbient);
 	}
 

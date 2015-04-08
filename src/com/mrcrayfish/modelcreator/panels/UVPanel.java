@@ -107,7 +107,8 @@ public class UVPanel extends JPanel implements IValueUpdater
 		});
 		btnPlusX.setSize(new Dimension(62, 30));
 		btnPlusX.setFont(defaultFont);
-
+		btnPlusX.setToolTipText("<html>Increases the start U.<br><b>Hold shift for decimals</b></html>");
+		
 		btnPlusY.addActionListener(e ->
 		{
 			if (manager.getSelectedCuboid() != null)
@@ -128,7 +129,8 @@ public class UVPanel extends JPanel implements IValueUpdater
 		});
 		btnPlusY.setPreferredSize(new Dimension(62, 30));
 		btnPlusY.setFont(defaultFont);
-
+		btnPlusY.setToolTipText("<html>Increases the start V.<br><b>Hold shift for decimals</b></html>");
+		 
 		btnNegX.addActionListener(e ->
 		{
 			if (manager.getSelectedCuboid() != null)
@@ -149,7 +151,8 @@ public class UVPanel extends JPanel implements IValueUpdater
 		});
 		btnNegX.setSize(new Dimension(62, 30));
 		btnNegX.setFont(defaultFont);
-
+		btnNegX.setToolTipText("<html>Decreases the start U.<br><b>Hold shift for decimals</b></html>");
+		 
 		btnNegY.addActionListener(e ->
 		{
 			if (manager.getSelectedCuboid() != null)
@@ -170,7 +173,8 @@ public class UVPanel extends JPanel implements IValueUpdater
 		});
 		btnNegY.setSize(new Dimension(62, 30));
 		btnNegY.setFont(defaultFont);
-		
+		btnNegY.setToolTipText("<html>Decreases the start V.<br><b>Hold shift for decimals</b></html>");
+ 		
 		btnPlusXEnd.addActionListener(e ->
 		{
 			if (manager.getSelectedCuboid() != null)
@@ -191,7 +195,8 @@ public class UVPanel extends JPanel implements IValueUpdater
 		});
 		btnPlusXEnd.setSize(new Dimension(62, 30));
 		btnPlusXEnd.setFont(defaultFont);
-
+		btnPlusXEnd.setToolTipText("<html>Increases the end U.<br><b>Hold shift for decimals</b></html>");
+		 
 		btnPlusYEnd.addActionListener(e ->
 		{
 			if (manager.getSelectedCuboid() != null)
@@ -212,7 +217,8 @@ public class UVPanel extends JPanel implements IValueUpdater
 		});
 		btnPlusYEnd.setPreferredSize(new Dimension(62, 30));
 		btnPlusYEnd.setFont(defaultFont);
-
+		btnPlusYEnd.setToolTipText("<html>Increases the end V.<br><b>Hold shift for decimals</b></html>");
+		 
 		btnNegXEnd.addActionListener(e ->
 		{
 			if (manager.getSelectedCuboid() != null)
@@ -233,7 +239,8 @@ public class UVPanel extends JPanel implements IValueUpdater
 		});
 		btnNegXEnd.setSize(new Dimension(62, 30));
 		btnNegXEnd.setFont(defaultFont);
-
+		btnNegXEnd.setToolTipText("<html>Decreases the end U.<br><b>Hold shift for decimals</b></html>");
+		 
 		btnNegYEnd.addActionListener(e ->
 		{
 			if (manager.getSelectedCuboid() != null)
@@ -254,6 +261,7 @@ public class UVPanel extends JPanel implements IValueUpdater
 		});
 		btnNegYEnd.setSize(new Dimension(62, 30));
 		btnNegYEnd.setFont(defaultFont);
+		btnNegYEnd.setToolTipText("<html>Decreases the end V.<br><b>Hold shift for decimals</b></html>");
 	}
 
 	public void addComponents()

@@ -91,7 +91,8 @@ public class RotationPanel extends JPanel implements IValueUpdater
 		{
 			manager.getSelectedCuboid().setRotation(rotation.getValue() * 22.5D);
 		});
-		sliderPanel.setMaximumSize(new Dimension(190, 80));
+		rotation.setToolTipText("<html>The rotation of the element<br>Default: 0</html>");
+ 		sliderPanel.setMaximumSize(new Dimension(190, 80));
 		sliderPanel.add(rotation);
 
 		extraPanel = new JPanel(new GridLayout(1, 2));
