@@ -393,8 +393,8 @@ public class ModelCreator extends JFrame
 			GL11.glLoadName(i+1);
 			Element cube = manager.getCuboid(i);
 			cube.draw();
-			cube.drawExtras(manager);
 			GL11.glLoadName(0);
+			cube.drawExtras(manager);
 		}
 
 		GL11.glPushMatrix();
