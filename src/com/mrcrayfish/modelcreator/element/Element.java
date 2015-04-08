@@ -155,12 +155,9 @@ public class Element
 		GL11.glPushMatrix();
 		{
 			GL11.glEnable(GL_CULL_FACE);
-			GL11.glTranslated(getOriginX(), getOriginY(), -16+getOriginZ());
+			GL11.glTranslated(getOriginX(), getOriginY(), getOriginZ());
 			rotateAxis();
-			GL11.glTranslated(-getOriginX(), -getOriginY(), 16-getOriginZ());
-			
-			//TODO - this is quite a hacky way of fixing the z coordinate, but it is the best I could come up
-			GL11.glTranslated(0, 0, -16);
+			GL11.glTranslated(-getOriginX(), -getOriginY(), -getOriginZ());
 			
 			// North
 			if (faces[0].isEnabled())
@@ -213,7 +210,7 @@ public class Element
 		{
 			GL11.glPushMatrix();
 			{
-				GL11.glTranslated(getOriginX(), getOriginY(), -16+getOriginZ());
+				GL11.glTranslated(getOriginX(), getOriginY(), getOriginZ());
 				GL11.glColor3f(0.25F, 0.25F, 0.25F);
 				sphere.draw(0.2F, 16, 16);
 				rotateAxis();

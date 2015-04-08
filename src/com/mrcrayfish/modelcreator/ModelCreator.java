@@ -380,7 +380,7 @@ public class ModelCreator extends JFrame
 		glClearColor(0.92F, 0.92F, 0.93F, 1.0F);
 		drawGrid();
 
-		glTranslatef(-8, 0, 8);
+		glTranslatef(-8, 0, -8);
 		for (int i = 0; i < manager.getCuboidCount(); i++)
 		{
 			Element cube = manager.getCuboid(i);
@@ -394,7 +394,9 @@ public class ModelCreator extends JFrame
 			GL11.glShadeModel(GL11.GL_SMOOTH);
 			GL11.glEnable(GL11.GL_BLEND);
 			GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
-
+			GL11.glDisable(GL11.GL_CULL_FACE);
+			
+			glTranslated(0, 0, 16);
 			GL11.glScaled(0.018, 0.018, 0.018);
 			GL11.glRotated(90, 1, 0, 0);
 			fontBebasNeue.drawString(8, 0, "Model Creator by MrCrayfish", new Color(0.5F, 0.5F, 0.6F));
@@ -668,19 +670,20 @@ public class ModelCreator extends JFrame
 		glPushMatrix();
 		{
 			glColor3f(0.2F, 0.2F, 0.27F);
+			glTranslatef(-8, 0, -8);
 
 			// Bold outside lines
 			glLineWidth(2F);
 			glBegin(GL_LINES);
 			{
-				glVertex3i(-8, 0, -8);
-				glVertex3i(-8, 0, 8);
-				glVertex3i(8, 0, -8);
-				glVertex3i(8, 0, 8);
-				glVertex3i(-8, 0, 8);
-				glVertex3i(8, 0, 8);
-				glVertex3i(-8, 0, -8);
-				glVertex3i(8, 0, -8);
+				glVertex3i(0, 0, 0);
+				glVertex3i(0, 0, 16);
+				glVertex3i(16, 0, 0);
+				glVertex3i(16, 0, 16);
+				glVertex3i(0, 0, 16);
+				glVertex3i(16, 0, 16);
+				glVertex3i(0, 0, 0);
+				glVertex3i(16, 0, 0);
 			}
 			glEnd();
 
@@ -688,16 +691,16 @@ public class ModelCreator extends JFrame
 			glLineWidth(1F);
 			glBegin(GL_LINES);
 			{
-				for (int i = -7; i <= 7; i++)
+				for (int i = 1; i <= 16; i++)
 				{
-					glVertex3i(i, 0, -8);
-					glVertex3i(i, 0, 8);
+					glVertex3i(i, 0, 0);
+					glVertex3i(i, 0, 16);
 				}
 
-				for (int i = -7; i <= 7; i++)
+				for (int i = 1; i <= 16; i++)
 				{
-					glVertex3i(-8, 0, i);
-					glVertex3i(8, 0, i);
+					glVertex3i(0, 0, i);
+					glVertex3i(16, 0, i);
 				}
 			}
 			glEnd();

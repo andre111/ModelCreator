@@ -29,7 +29,7 @@ public class ElementSidebar implements Sidebar
 {
 	private double[] sideViewX = { 0, 0, 0 };
 	private double[] sideViewY = { 0, 0, 0 };
-	private double[] sideViewSizes = { 250, 250, 250 };
+	private double[] sideViewSizes = { 210, 210, 210 };
 	
 	private Element sidebarClickedElement = null;
 	private int sidebarClickField = 0;
