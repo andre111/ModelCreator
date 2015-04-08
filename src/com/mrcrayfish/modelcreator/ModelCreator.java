@@ -52,6 +52,9 @@ import com.mrcrayfish.modelcreator.sidebar.Sidebar;
 import com.mrcrayfish.modelcreator.texture.PendingTexture;
 import com.mrcrayfish.modelcreator.texture.TextureManager;
 
+//WARNING: THIS BRANCH IS COMPLETTLY BUGGED FROM THE ATTEMPT TO ENABLE SINGLE PIXEL REMOVAL
+//			ONLY THE NORTH SIDE IS IMPLEMENTED AND WORKS
+//			EAST IS IMPLEMENTED BUT DOESNT WORK AT ALL
 public class ModelCreator extends JFrame
 {
 	private static final long serialVersionUID = 1L;

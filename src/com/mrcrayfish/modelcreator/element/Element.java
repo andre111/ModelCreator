@@ -356,22 +356,86 @@ public class Element
 		}
 		//east
 		case 1: {
+			if(width>1) {
+				Element e = new Element(width-1, height, depth);
+				e.setStartX(startX);
+				e.setStartY(startY);
+				e.setStartZ(startZ);
+				list.add(e);
+			}
+			int right = pixel/(int) Math.ceil(height);
+			int below = pixel - (int) Math.floor(right * height);
+			double top = height - below - 1;
+			double left = depth - right - 1;
+			
+			if(right>0) {
+				Element e = new Element(1, height, right);
+				e.setStartX(startX+width-1);
+				e.setStartY(startY);
+				e.setStartZ(startZ);
+				list.add(e);
+			}
+			
+			if(below>0) {
+				Element e = new Element(1, below, 1);
+				e.setStartX(startX+width-1);
+				e.setStartY(startY);
+				e.setStartZ(startZ+right);
+				list.add(e);
+			}
+			
+			if(top>0) {
+				Element e = new Element(1, top, 1);
+				e.setStartX(startX+width-1);
+				e.setStartY(startY+below+1);
+				e.setStartZ(startZ+right);
+				list.add(e);
+			}
+			
+			if(left>0) {
+				Element e = new Element(1, height, left);
+				e.setStartX(startX+width-1);
+				e.setStartY(startY);
+				e.setStartZ(startZ+right+1);
+				list.add(e);
+			}
+			
 			break;
 		}
 		//south
 		case 2: {
+			int right = pixel/(int) Math.ceil(height);
+			int below = pixel - (int) Math.floor(right * height);
+			double top = height - below - 1;
+			double left = width - right - 1;
+			
 			break;
 		}
 		//west
 		case 3: {
+			int right = pixel/(int) Math.ceil(height);
+			int below = pixel - (int) Math.floor(right * height);
+			double top = height - below - 1;
+			double left = depth - right - 1;
+			
 			break;
 		}
 		//up
 		case 4: {
+			int right = pixel/(int) Math.ceil(height);
+			int below = pixel - (int) Math.floor(right * height);
+			double top = width - below - 1;
+			double left = depth - right - 1;
+			
 			break;
 		}
 		//down
 		case 5: {
+			int right = pixel/(int) Math.ceil(height);
+			int below = pixel - (int) Math.floor(right * height);
+			double top = width - below - 1;
+			double left = depth - right - 1;
+			
 			break;
 		}
 		}
