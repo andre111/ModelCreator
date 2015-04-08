@@ -45,6 +45,7 @@ import org.newdawn.slick.opengl.Texture;
 import com.mrcrayfish.modelcreator.dialog.WelcomeDialog;
 import com.mrcrayfish.modelcreator.element.Element;
 import com.mrcrayfish.modelcreator.element.ElementManager;
+import com.mrcrayfish.modelcreator.element.Face;
 import com.mrcrayfish.modelcreator.panels.SidebarPanel;
 import com.mrcrayfish.modelcreator.sidebar.ElementSidebar;
 import com.mrcrayfish.modelcreator.sidebar.FaceSidebar;
@@ -735,6 +736,56 @@ public class ModelCreator extends JFrame
 		
 		manager.removeElement(cube);
 		for(Element e : removedPixel) {
+			for(Face f : element.getAllFaces()) {
+				Face of = e.getAllFaces()[f.getSide()];
+				
+				double ustart = f.getStartU();
+				double vstart = f.getStartV();
+				
+				switch(f.getSide()) {
+				case 0: {
+					ustart += (element.getWidth() - e.getWidth()) - (e.getStartX() - element.getStartX());
+					vstart += (element.getHeight() - e.getHeight()) - (e.getStartY() - element.getStartY());
+					break;
+				}
+				case 1: {
+					ustart += (element.getDepth() - e.getDepth()) - (e.getStartZ() - element.getStartZ());
+					vstart += (element.getHeight() - e.getHeight()) - (e.getStartY() - element.getStartY());
+					break;
+				}
+				//works
+				case 2: {
+					ustart += e.getStartX() - element.getStartX();
+					vstart += (element.getHeight() - e.getHeight()) - (e.getStartY() - element.getStartY());
+					break;
+				}
+				//works
+				case 3: {
+					ustart += e.getStartZ() - element.getStartZ();
+					vstart += (element.getHeight() - e.getHeight()) - (e.getStartY() - element.getStartY());
+					break;
+				}
+				//works
+				case 4: {
+					ustart += e.getStartX() - element.getStartX();
+					vstart += e.getStartZ() - element.getStartZ();
+					break;
+				}
+				case 5: {
+					ustart += e.getStartX() - element.getStartX();
+					vstart += (element.getDepth() - e.getDepth()) - (e.getStartZ() - element.getStartZ());
+					break;
+				}
+				}
+				
+				of.setAutoUVEnabled(f.isAutoUVEnabled());
+				of.setStartU(ustart);
+				of.setStartV(vstart);
+
+				of.setTexture(f.getTextureName());
+				of.setTextureLocation(f.getTextureLocation());
+			}
+			e.updateUV();
 			manager.addElement(e);
 		}
 	}
