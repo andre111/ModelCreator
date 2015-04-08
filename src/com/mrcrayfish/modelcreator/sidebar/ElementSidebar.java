@@ -271,7 +271,7 @@ public class ElementSidebar implements Sidebar
 							for (int c = 0; c < manager.getCuboidCount(); c++)
 							{
 								Element cube = manager.getCuboid(c);
-								if(!manager.getSelectedCuboid().equals(cube))
+								if(!cube.equals(manager.getSelectedCuboid()))
 									continue;
 									
 								double xstart = 0;

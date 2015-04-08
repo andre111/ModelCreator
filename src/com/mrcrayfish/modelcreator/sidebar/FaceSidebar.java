@@ -133,7 +133,7 @@ public class FaceSidebar implements Sidebar
 			for (int i = 0; i < manager.getCuboidCount(); i++)
 			{
 				Element cube = manager.getCuboid(i);
-				if(!(cube).equals(manager.getSelectedCuboid()))
+				if(!cube.equals(manager.getSelectedCuboid()))
 					continue;
 					
 				Face face = cube.getAllFaces()[5-side];
