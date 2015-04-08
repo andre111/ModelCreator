@@ -23,7 +23,7 @@ public class Face
 	private boolean cullface = false;
 	private boolean enabled = true;
 	private boolean autoUV = true;
-	private double rotation;
+	private int rotation;
 
 	private Element cuboid;
 	private int side;
@@ -91,19 +91,19 @@ public class Face
 					GL11.glBegin(GL11.GL_QUADS);
 					{
 						if (binded)
-							GL11.glTexCoord2d(uStart, vEnd);
+							setTexCoord(0, uStart, uEnd, vStart, vEnd);
 						GL11.glVertex3d(xEnd, yStart, cuboid.getStartZ());
 		
 						if (binded)
-							GL11.glTexCoord2d(uEnd, vEnd);
+							setTexCoord(1, uStart, uEnd, vStart, vEnd);
 						GL11.glVertex3d(xStart, yStart, cuboid.getStartZ());
 		
 						if (binded)
-							GL11.glTexCoord2d(uEnd, vStart);
+							setTexCoord(2, uStart, uEnd, vStart, vEnd);
 						GL11.glVertex3d(xStart, yEnd, cuboid.getStartZ());
 		
 						if (binded)
-							GL11.glTexCoord2d(uStart, vStart);
+							setTexCoord(3, uStart, uEnd, vStart, vEnd);
 						GL11.glVertex3d(xEnd, yEnd, cuboid.getStartZ());
 					}
 					GL11.glEnd();
@@ -171,19 +171,19 @@ public class Face
 					GL11.glBegin(GL11.GL_QUADS);
 					{
 						if (binded)
-							GL11.glTexCoord2d(uStart, vEnd);
+							setTexCoord(0, uStart, uEnd, vStart, vEnd);
 						GL11.glVertex3d(cuboid.getStartX() + cuboid.getWidth(), yStart, zEnd);
 		
 						if (binded)
-							GL11.glTexCoord2d(uEnd, vEnd);
+							setTexCoord(1, uStart, uEnd, vStart, vEnd);
 						GL11.glVertex3d(cuboid.getStartX() + cuboid.getWidth(), yStart, zStart);
 		
 						if (binded)
-							GL11.glTexCoord2d(uEnd, vStart);
+							setTexCoord(2, uStart, uEnd, vStart, vEnd);
 						GL11.glVertex3d(cuboid.getStartX() + cuboid.getWidth(), yEnd, zStart);
 		
 						if (binded)
-							GL11.glTexCoord2d(uStart, vStart);
+							setTexCoord(3, uStart, uEnd, vStart, vEnd);
 						GL11.glVertex3d(cuboid.getStartX() + cuboid.getWidth(), yEnd, zEnd);
 					}
 					GL11.glEnd();
@@ -254,19 +254,19 @@ public class Face
 					GL11.glBegin(GL11.GL_QUADS);
 					{
 						if (binded)
-							GL11.glTexCoord2d(uStart, vEnd);
+							setTexCoord(0, uStart, uEnd, vStart, vEnd);
 						GL11.glVertex3d(xStart, yStart, cuboid.getStartZ() + cuboid.getDepth());
 		
 						if (binded)
-							GL11.glTexCoord2d(uEnd, vEnd);
+							setTexCoord(1, uStart, uEnd, vStart, vEnd);
 						GL11.glVertex3d(xEnd, yStart, cuboid.getStartZ() + cuboid.getDepth());
 		
 						if (binded)
-							GL11.glTexCoord2d(uEnd, vStart);
+							setTexCoord(2, uStart, uEnd, vStart, vEnd);
 						GL11.glVertex3d(xEnd, yEnd, cuboid.getStartZ() + cuboid.getDepth());
 		
 						if (binded)
-							GL11.glTexCoord2d(uStart, vStart);
+							setTexCoord(3, uStart, uEnd, vStart, vEnd);
 						GL11.glVertex3d(xStart, yEnd, cuboid.getStartZ() + cuboid.getDepth());
 					}
 					GL11.glEnd();
@@ -334,19 +334,19 @@ public class Face
 					GL11.glBegin(GL11.GL_QUADS);
 					{
 						if (binded)
-							GL11.glTexCoord2d(uStart, vEnd);
+							setTexCoord(0, uStart, uEnd, vStart, vEnd);
 						GL11.glVertex3d(cuboid.getStartX(), yStart, zStart);
 		
 						if (binded)
-							GL11.glTexCoord2d(uEnd, vEnd);
+							setTexCoord(1, uStart, uEnd, vStart, vEnd);
 						GL11.glVertex3d(cuboid.getStartX(), yStart, zEnd);
 		
 						if (binded)
-							GL11.glTexCoord2d(uEnd, vStart);
+							setTexCoord(2, uStart, uEnd, vStart, vEnd);
 						GL11.glVertex3d(cuboid.getStartX(), yEnd, zEnd);
 		
 						if (binded)
-							GL11.glTexCoord2d(uStart, vStart);
+							setTexCoord(3, uStart, uEnd, vStart, vEnd);
 						GL11.glVertex3d(cuboid.getStartX(), yEnd, zStart);
 					}
 					GL11.glEnd();
@@ -414,19 +414,19 @@ public class Face
 					GL11.glBegin(GL11.GL_QUADS);
 					{
 						if (binded)
-							GL11.glTexCoord2d(uStart, vEnd);
+							setTexCoord(0, uStart, uEnd, vStart, vEnd);
 						GL11.glVertex3d(xStart, cuboid.getStartY() + cuboid.getHeight(), zEnd);
 		
 						if (binded)
-							GL11.glTexCoord2d(uEnd, vEnd);
+							setTexCoord(1, uStart, uEnd, vStart, vEnd);
 						GL11.glVertex3d(xEnd, cuboid.getStartY() + cuboid.getHeight(), zEnd);
 		
 						if (binded)
-							GL11.glTexCoord2d(uEnd, vStart);
+							setTexCoord(2, uStart, uEnd, vStart, vEnd);
 						GL11.glVertex3d(xEnd, cuboid.getStartY() + cuboid.getHeight(), zStart);
 		
 						if (binded)
-							GL11.glTexCoord2d(uStart, vStart);
+							setTexCoord(3, uStart, uEnd, vStart, vEnd);
 						GL11.glVertex3d(xStart, cuboid.getStartY() + cuboid.getHeight(), zStart);
 					}
 					GL11.glEnd();
@@ -494,19 +494,19 @@ public class Face
 					GL11.glBegin(GL11.GL_QUADS);
 					{
 						if (binded)
-							GL11.glTexCoord2d(uStart, vEnd);
+							setTexCoord(0, uStart, uEnd, vStart, vEnd);
 						GL11.glVertex3d(xStart, cuboid.getStartY(), zStart);
 		
 						if (binded)
-							GL11.glTexCoord2d(uEnd, vEnd);
+							setTexCoord(1, uStart, uEnd, vStart, vEnd);
 						GL11.glVertex3d(xEnd, cuboid.getStartY(), zStart);
 		
 						if (binded)
-							GL11.glTexCoord2d(uEnd, vStart);
+							setTexCoord(2, uStart, uEnd, vStart, vEnd);
 						GL11.glVertex3d(xEnd, cuboid.getStartY(), zEnd);
 		
 						if (binded)
-							GL11.glTexCoord2d(uStart, vStart);
+							setTexCoord(3, uStart, uEnd, vStart, vEnd);
 						GL11.glVertex3d(xStart, cuboid.getStartY(), zEnd);
 					}
 					GL11.glEnd();
@@ -520,16 +520,25 @@ public class Face
 		return namePos;
 	}
 
+	public void setTexCoord(int corner, double uStart, double uEnd, double vStart, double vEnd)
+	{
+		int coord = corner + rotation;
+		if(coord == 0 | coord == 4)
+			GL11.glTexCoord2d(uStart, vEnd);
+		if(coord == 1 | coord == 5)
+			GL11.glTexCoord2d(uEnd, vEnd);
+		if(coord == 2 | coord == 6)
+			GL11.glTexCoord2d(uEnd, vStart);
+		if(coord == 3)
+			GL11.glTexCoord2d(uStart, vStart);
+	}
+
 	public void startRender()
 	{
 		GL11.glEnable(GL_TEXTURE_2D);
 		GL11.glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 
 		bindTexture();
-		GL11.glMatrixMode(GL11.GL_TEXTURE);
-		GL11.glLoadIdentity();
-		GL11.glRotated(getRotation(), 0, 0, 1);
-		GL11.glMatrixMode(GL11.GL_MODELVIEW);
 	}
 
 	public void finishRender()
@@ -731,12 +740,12 @@ public class Face
 		return -1;
 	}
 
-	public double getRotation()
+	public int getRotation()
 	{
 		return rotation;
 	}
 
-	public void setRotation(double rotation)
+	public void setRotation(int rotation)
 	{
 		this.rotation = rotation;
 	}
