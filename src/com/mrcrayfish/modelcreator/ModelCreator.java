@@ -781,7 +781,8 @@ public class ModelCreator extends JFrame
 				of.setAutoUVEnabled(f.isAutoUVEnabled());
 				of.setStartU(ustart);
 				of.setStartV(vstart);
-
+				of.setRotation(f.getRotation());
+				
 				of.setTexture(f.getTextureName());
 				of.setTextureLocation(f.getTextureLocation());
 			}
