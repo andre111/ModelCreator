@@ -13,6 +13,9 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.File;
 import java.io.InputStream;
+import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
+import java.nio.IntBuffer;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
@@ -326,23 +329,16 @@ public class ModelCreator extends JFrame
 			}
 			
 			int offset = width / sidebarSize;
+			glViewport(offset, 0, width-offset, height);
 
 			handleInput();
-
-			glViewport(offset, 0, width-offset, height);
+			
 			glMatrixMode(GL_PROJECTION);
 			glLoadIdentity();
 			GLU.gluPerspective(60F, (float) (width-offset) / (float) height, 0.3F, 1000F);
-			glMatrixMode(GL_MODELVIEW);
-			glLoadIdentity();
-			glEnable(GL_DEPTH_TEST);
 
-			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-			glLoadIdentity();
-			camera.useView();
-
-			drawPerspective();
-
+			draw();
+			
 			glDisable(GL_DEPTH_TEST);
 			glDisable(GL_CULL_FACE);
 			glDisable(GL_TEXTURE_2D);
@@ -374,6 +370,17 @@ public class ModelCreator extends JFrame
 			Display.update();
 		}
 	}
+	
+	public void draw() {
+		glMatrixMode(GL_MODELVIEW);
+		glLoadIdentity();
+		glEnable(GL_DEPTH_TEST);
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+		glLoadIdentity();
+		camera.useView();
+
+		drawPerspective();
+	}
 
 	public void drawPerspective()
 	{
@@ -383,9 +390,11 @@ public class ModelCreator extends JFrame
 		glTranslatef(-8, 0, -8);
 		for (int i = 0; i < manager.getCuboidCount(); i++)
 		{
+			GL11.glLoadName(i+1);
 			Element cube = manager.getCuboid(i);
 			cube.draw();
 			cube.drawExtras(manager);
+			GL11.glLoadName(0);
 		}
 
 		GL11.glPushMatrix();
@@ -457,6 +466,7 @@ public class ModelCreator extends JFrame
 
 	private int lastMouseX, lastMouseY;
 	private boolean grabbing = false;
+	private Element grabbed = null;
 	public void handleInput()
 	{
 		final float cameraMod = Math.abs(camera.getZ());
@@ -484,26 +494,34 @@ public class ModelCreator extends JFrame
 			else
 			{
 				grabbing = false;
+				grabbed = null;
 			}
 
 			if (Keyboard.isKeyDown(Keyboard.KEY_LCONTROL))
 			{
-				if (manager.getSelectedCuboid() != null)
-				{
+				if(grabbed==null) {
+					if(Mouse.isButtonDown(0) | Mouse.isButtonDown(1)) {
+						int sel = select(Mouse.getX(), Mouse.getY());
+						if(sel>=0) {
+							grabbed = manager.getAllCuboids().get(sel);
+							manager.setSelectedCuboid(sel);
+							System.out.println(sel);
+						}
+					}
+				} else {
+					Element element = grabbed;
 					int state = getCameraState(camera);
-					System.out.println(state);
+					
+					int newMouseX = Mouse.getX();
+					int newMouseY = Mouse.getY();
 
-					if (Mouse.isButtonDown(0))
+					int xMovement = (int) ((newMouseX - lastMouseX) / 20);
+					int yMovement = (int) ((newMouseY - lastMouseY) / 20);
+					
+					if (xMovement != 0 | yMovement != 0)
 					{
-						int newMouseX = Mouse.getX();
-						int newMouseY = Mouse.getY();
-
-						int xMovement = (int) ((newMouseX - lastMouseX) / 20);
-						int yMovement = (int) ((newMouseY - lastMouseY) / 20);
-
-						if (xMovement != 0 | yMovement != 0)
+						if (Mouse.isButtonDown(0))
 						{
-							Element element = manager.getSelectedCuboid();
 							switch (state)
 							{
 							case 0:
@@ -539,27 +557,9 @@ public class ModelCreator extends JFrame
 								element.addStartZ(-xMovement);
 								break;
 							}
-							
-							if (xMovement != 0)
-								lastMouseX = newMouseX;
-							if (yMovement != 0)
-								lastMouseY = newMouseY;
-
-							manager.updateValues();
-							element.updateUV();
 						}
-					}
-					else if (Mouse.isButtonDown(1))
-					{
-						int newMouseX = Mouse.getX();
-						int newMouseY = Mouse.getY();
-
-						int xMovement = (int) ((newMouseX - lastMouseX) / 20);
-						int yMovement = (int) ((newMouseY - lastMouseY) / 20);
-
-						if (xMovement != 0 | yMovement != 0)
+						else if (Mouse.isButtonDown(1))
 						{
-							Element element = manager.getSelectedCuboid();
 							switch (state)
 							{
 							case 0:
@@ -599,41 +599,98 @@ public class ModelCreator extends JFrame
 								element.addWidth(xMovement);
 								break;
 							}
-							
-							if (xMovement != 0)
-								lastMouseX = newMouseX;
-							if (yMovement != 0)
-								lastMouseY = newMouseY;
-
-							manager.updateValues();
-							element.updateUV();
 						}
+						
+						if (xMovement != 0)
+							lastMouseX = newMouseX;
+						if (yMovement != 0)
+							lastMouseY = newMouseY;
+
+						manager.updateValues();
+						element.updateUV();
 					}
 				}
 			}
 			else
 			{
-				if (Mouse.isButtonDown(0))
-				{
-					final float modifier = (cameraMod * 0.05f);
-					camera.addX((float) (Mouse.getDX() * 0.01F) * modifier);
-					camera.addY((float) (Mouse.getDY() * 0.01F) * modifier);
-				}
-				else if (Mouse.isButtonDown(1))
-				{
-					final float modifier = applyLimit(cameraMod * 0.1f);
-					camera.rotateX(-(float) (Mouse.getDY() * 0.5F) * modifier);
-					final float rxAbs = Math.abs(camera.getRX());
-					camera.rotateY((rxAbs >= 90 && rxAbs < 270 ? -1 : 1) * (float) (Mouse.getDX() * 0.5F) * modifier);
-				}
-
-				final float wheel = Mouse.getDWheel();
-				if (wheel != 0)
-				{
-					camera.addZ(wheel * (cameraMod / 5000F));
+				if(Keyboard.isKeyDown(Keyboard.KEY_LSHIFT)) {
+					if(Mouse.isButtonDown(0)) {
+						select(Mouse.getX(), Mouse.getY());
+					}
+				} else {
+					if (Mouse.isButtonDown(0))
+					{
+						final float modifier = (cameraMod * 0.05f);
+						camera.addX((float) (Mouse.getDX() * 0.01F) * modifier);
+						camera.addY((float) (Mouse.getDY() * 0.01F) * modifier);
+					}
+					else if (Mouse.isButtonDown(1))
+					{
+						final float modifier = applyLimit(cameraMod * 0.1f);
+						camera.rotateX(-(float) (Mouse.getDY() * 0.5F) * modifier);
+						final float rxAbs = Math.abs(camera.getRX());
+						camera.rotateY((rxAbs >= 90 && rxAbs < 270 ? -1 : 1) * (float) (Mouse.getDX() * 0.5F) * modifier);
+					}
+	
+					final float wheel = Mouse.getDWheel();
+					if (wheel != 0)
+					{
+						camera.addZ(wheel * (cameraMod / 5000F));
+					}
 				}
 			}
 		}
+	}
+	
+	public int select(int x, int y) {
+		IntBuffer selBuffer = ByteBuffer.allocateDirect(1024).order(ByteOrder.nativeOrder()).asIntBuffer();
+		int[] buffer = new int[256];
+		
+		IntBuffer viewBuffer = ByteBuffer.allocateDirect(64).order(ByteOrder.nativeOrder()).asIntBuffer();
+		int[] viewport = new int[4];
+		
+		int hits;
+		GL11.glGetInteger(GL11.GL_VIEWPORT, viewBuffer);
+		viewBuffer.get(viewport);
+		
+		int offset = width / sidebarSize;
+		
+		GL11.glSelectBuffer(selBuffer);
+		GL11.glRenderMode(GL11.GL_SELECT);
+		GL11.glInitNames();
+		GL11.glPushName(0);
+		GL11.glPushMatrix();
+		{
+			GL11.glMatrixMode(GL11.GL_PROJECTION);
+			GL11.glLoadIdentity();
+			GLU.gluPickMatrix(x, y, 1, 1, IntBuffer.wrap(viewport));
+			GLU.gluPerspective(60F, (float) (width-offset) / (float) height, 0.3F, 1000F);
+			
+			draw();
+		}
+		GL11.glPopMatrix();
+		hits = GL11.glRenderMode(GL11.GL_RENDER);
+		System.out.println("hits: "+hits);
+		
+		selBuffer.get(buffer);
+		if(hits > 0) {
+			int choose = buffer[3];
+			int depth = buffer[1];
+			
+			for(int i=1; i<hits; i++) {
+				if(buffer[i+4+1]<depth) {
+					choose = buffer[i*4+3];
+					depth = buffer[i*4+1];
+				}
+			}
+			System.out.println("choose: "+choose);
+			
+			if(choose>0) {
+				return choose-1;
+			}
+		}
+		
+		return -1;
 	}
 
 	public float applyLimit(float value)
