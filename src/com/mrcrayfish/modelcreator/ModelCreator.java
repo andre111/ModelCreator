@@ -676,7 +676,7 @@ public class ModelCreator extends JFrame
 			int depth = buffer[1];
 			
 			for(int i=1; i<hits; i++) {
-				if(buffer[i+4+1]<depth) {
+				if(buffer[i+4+1]<depth || choose==0) {
 					choose = buffer[i*4+3];
 					depth = buffer[i*4+1];
 				}
