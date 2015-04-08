@@ -170,7 +170,7 @@ public class ElementSidebar implements Sidebar
 					ystart = (16 - cube.getStartY() - cube.getHeight()) * size/16.0;
 					width = cube.getDepth() * size/16.0;
 					height = cube.getHeight() * size/16.0;
-					GL11.glColor3f(1, 1, 0);
+					GL11.glColor3f(0, 0, 1);
 					break;
 				}
 				}

@@ -169,7 +169,7 @@ public class Element
 			// East
 			if (faces[1].isEnabled())
 			{
-				GL11.glColor3f(0, 0, 1);
+				GL11.glColor3f(1, 1, 0);
 				faces[1].renderEast();
 			}
 
@@ -183,7 +183,7 @@ public class Element
 			// West
 			if (faces[3].isEnabled())
 			{
-				GL11.glColor3f(1, 1, 0);
+				GL11.glColor3f(0, 0, 1);
 				faces[3].renderWest();
 			}
 

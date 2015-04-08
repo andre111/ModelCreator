@@ -155,7 +155,7 @@ public class FaceSidebar implements Sidebar
 				}
 				//west
 				case 2: {
-					GL11.glColor3f(1, 1, 0);
+					GL11.glColor3f(0, 0, 1);
 					break;
 				}
 				//south
@@ -165,7 +165,7 @@ public class FaceSidebar implements Sidebar
 				}
 				//east
 				case 4: {
-					GL11.glColor3f(0, 0, 1);
+					GL11.glColor3f(1, 1, 0);
 					break;
 				}
 				//north
