@@ -505,7 +505,6 @@ public class ModelCreator extends JFrame
 						if(sel>=0) {
 							grabbed = manager.getAllCuboids().get(sel);
 							manager.setSelectedCuboid(sel);
-							System.out.println(sel);
 						}
 					}
 				} else {
@@ -670,7 +669,6 @@ public class ModelCreator extends JFrame
 		}
 		GL11.glPopMatrix();
 		hits = GL11.glRenderMode(GL11.GL_RENDER);
-		System.out.println("hits: "+hits);
 		
 		selBuffer.get(buffer);
 		if(hits > 0) {
@@ -683,7 +681,6 @@ public class ModelCreator extends JFrame
 					depth = buffer[i*4+1];
 				}
 			}
-			System.out.println("choose: "+choose);
 			
 			if(choose>0) {
 				return choose-1;
