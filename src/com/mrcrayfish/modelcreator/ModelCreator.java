@@ -366,6 +366,12 @@ public class ModelCreator extends JFrame
 			{
 				glVertex2i(offset, 0);
 				glVertex2i(offset, height);
+				
+				glVertex2i(offset, 0);
+				glVertex2i(width, 0);
+				
+				glVertex2i(width, 0);
+				glVertex2i(width, height);
 			}
 			glEnd();
 			if(sidebar!=null) {

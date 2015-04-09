@@ -56,6 +56,17 @@ public class FaceSidebar implements Sidebar
 	{
 		GL11.glPushMatrix();
 		{
+			GL11.glColor3f(0.866F, 0.866F, 0.894F);
+			glBegin(GL11.GL_QUADS);
+			{
+				glVertex2i(0, 0);
+				glVertex2i(w, 0);
+				glVertex2i(w, height);
+				glVertex2i(0, height);
+			}
+			glEnd();
+			glColor3d(0.6, 0.6, 0.6);
+			
 			int h = height / 6;
 			int ystart = 0;
 
