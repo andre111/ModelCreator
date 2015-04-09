@@ -312,6 +312,7 @@ public class ModelCreator extends JFrame
 	private void loop() throws LWJGLException
 	{
 		camera = new Camera(60F, (float) Display.getWidth() / (float) Display.getHeight(), 0.3F, 1000F);
+		camera.addZ(-3f);
 
 		Dimension newDim;
 
