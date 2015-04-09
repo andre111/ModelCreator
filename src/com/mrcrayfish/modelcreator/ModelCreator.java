@@ -741,6 +741,7 @@ public class ModelCreator extends JFrame
 				Face of = e.getAllFaces()[f.getSide()];
 				
 				FaceDimension fdim = element.getFaceDimension(f.getSide());
+				FaceDimension ofdim = e.getFaceDimension(of.getSide());
 				
 				double ustart = f.getStartU();
 				double vstart = f.getStartV();
@@ -757,52 +758,37 @@ public class ModelCreator extends JFrame
 				case 0: {
 					ustart += ((element.getWidth() - e.getWidth()) - (e.getStartX() - element.getStartX())) * uratio;
 					vstart += ((element.getHeight() - e.getHeight()) - (e.getStartY() - element.getStartY())) * vratio;
-					
-					uend = (udiff * e.getWidth()/element.getWidth()) + ustart;
-					vend = (vdiff * e.getHeight()/element.getHeight()) + vstart;
 					break;
 				}
 				case 1: {
 					ustart += ((element.getDepth() - e.getDepth()) - (e.getStartZ() - element.getStartZ())) * uratio;
 					vstart += ((element.getHeight() - e.getHeight()) - (e.getStartY() - element.getStartY())) * vratio;
-					
-					uend = (udiff * e.getDepth()/element.getDepth()) + ustart;
-					vend = (vdiff * e.getHeight()/element.getHeight()) + vstart;
 					break;
 				}
 				case 2: {
 					ustart += (e.getStartX() - element.getStartX()) * uratio;
 					vstart += ((element.getHeight() - e.getHeight()) - (e.getStartY() - element.getStartY())) * vratio;
-					
-					uend = (udiff * e.getWidth()/element.getWidth()) + ustart;
-					vend = (vdiff * e.getHeight()/element.getHeight()) + vstart;
 					break;
 				}
 				case 3: {
 					ustart += (e.getStartZ() - element.getStartZ()) * uratio;
 					vstart += ((element.getHeight() - e.getHeight()) - (e.getStartY() - element.getStartY())) * vratio;
-					
-					uend = (udiff * e.getDepth()/element.getDepth()) + ustart;
-					vend = (vdiff * e.getHeight()/element.getHeight()) + vstart;
 					break;
 				}
 				case 4: {
 					ustart += (e.getStartX() - element.getStartX()) * uratio;
 					vstart += (e.getStartZ() - element.getStartZ()) * vratio;
-					
-					uend = (udiff * e.getWidth()/element.getWidth()) + ustart;
-					vend = (vdiff * e.getDepth()/element.getDepth()) + vstart;
 					break;
 				}
 				case 5: {
 					ustart += (e.getStartX() - element.getStartX()) * uratio;
 					vstart += ((element.getDepth() - e.getDepth()) - (e.getStartZ() - element.getStartZ())) * vratio;
-					
-					uend = (udiff * e.getWidth()/element.getWidth()) + ustart;
-					vend = (vdiff * e.getDepth()/element.getDepth()) + vstart;
 					break;
 				}
 				}
+				
+				uend = (udiff * ofdim.getWidth()/fdim.getWidth()) + ustart;
+				vend = (vdiff * ofdim.getHeight()/fdim.getHeight()) + vstart;
 				
 				of.setAutoUVEnabled(f.isAutoUVEnabled());
 				of.setStartU(ustart);
