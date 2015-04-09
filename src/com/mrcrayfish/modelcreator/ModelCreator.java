@@ -52,6 +52,7 @@ import com.mrcrayfish.modelcreator.sidebar.FaceSidebar;
 import com.mrcrayfish.modelcreator.sidebar.Sidebar;
 import com.mrcrayfish.modelcreator.texture.PendingTexture;
 import com.mrcrayfish.modelcreator.texture.TextureManager;
+import com.mrcrayfish.modelcreator.util.FaceDimension;
 
 //NOW WORKING AGAIN(NO UV SUPPORT AS OF NOW):
 //WARNING: THIS BRANCH IS COMPLETTLY BUGGED FROM THE ATTEMPT TO ENABLE SINGLE PIXEL REMOVAL
@@ -739,73 +740,81 @@ public class ModelCreator extends JFrame
 			for(Face f : element.getAllFaces()) {
 				Face of = e.getAllFaces()[f.getSide()];
 				
+				FaceDimension fdim = element.getFaceDimension(f.getSide());
+				
 				double ustart = f.getStartU();
 				double vstart = f.getStartV();
 				double uend = f.getEndU();
 				double vend = f.getEndV();
 				
+				double udiff = uend - ustart;
+				double vdiff = vend - vstart;
+				
+				double uratio = udiff / fdim.getWidth();
+				double vratio = vdiff / fdim.getHeight();
+				
 				switch(f.getSide()) {
 				case 0: {
-					double ustartNew = ustart + (element.getWidth() - e.getWidth()) - (e.getStartX() - element.getStartX());
-					double vstartNew = vstart + (element.getHeight() - e.getHeight()) - (e.getStartY() - element.getStartY());
+					double ustartNew = ustart + ((element.getWidth() - e.getWidth()) - (e.getStartX() - element.getStartX())) * uratio;
+					double vstartNew = vstart + ((element.getHeight() - e.getHeight()) - (e.getStartY() - element.getStartY())) * vratio;
 					
-					uend = ((uend - ustart) * e.getWidth()/element.getWidth()) + ustartNew;
-					vend = ((vend - vstart) * e.getHeight()/element.getHeight()) + vstartNew;
+					uend = (udiff * e.getWidth()/element.getWidth()) + ustartNew;
+					vend = (vdiff * e.getHeight()/element.getHeight()) + vstartNew;
 
 					ustart = ustartNew;
 					vstart = vstartNew;
 					break;
 				}
 				case 1: {
-					double ustartNew = ustart + (element.getDepth() - e.getDepth()) - (e.getStartZ() - element.getStartZ());
-					double vstartNew = vstart + (element.getHeight() - e.getHeight()) - (e.getStartY() - element.getStartY());
+					double ustartNew = ustart + ((element.getDepth() - e.getDepth()) - (e.getStartZ() - element.getStartZ())) * uratio;
+					double vstartNew = vstart + ((element.getHeight() - e.getHeight()) - (e.getStartY() - element.getStartY())) * vratio;
 					
-					uend = ((uend - ustart) * e.getDepth()/element.getDepth()) + ustartNew;
-					vend = ((vend - vstart) * e.getHeight()/element.getHeight()) + vstartNew;
+					uend = (udiff * e.getDepth()/element.getDepth()) + ustartNew;
+					vend = (vdiff * e.getHeight()/element.getHeight()) + vstartNew;
 
 					ustart = ustartNew;
 					vstart = vstartNew;
 					break;
 				}
 				case 2: {
-					double ustartNew = ustart + e.getStartX() - element.getStartX();
-					double vstartNew = vstart + (element.getHeight() - e.getHeight()) - (e.getStartY() - element.getStartY());
+					double ustartNew = ustart + (e.getStartX() - element.getStartX()) * uratio;
+					double vstartNew = vstart + ((element.getHeight() - e.getHeight()) - (e.getStartY() - element.getStartY())) * vratio;
 					
-					uend = ((uend - ustart) * e.getWidth()/element.getWidth()) + ustartNew;
-					vend = ((vend - vstart) * e.getHeight()/element.getHeight()) + vstartNew;
+					uend = (udiff * e.getWidth()/element.getWidth()) + ustartNew;
+					vend = (vdiff * e.getHeight()/element.getHeight()) + vstartNew;
 
 					ustart = ustartNew;
 					vstart = vstartNew;
 					break;
 				}
 				case 3: {
-					double ustartNew = ustart + e.getStartZ() - element.getStartZ();
-					double vstartNew = vstart + (element.getHeight() - e.getHeight()) - (e.getStartY() - element.getStartY());
+					double ustartNew = ustart + (e.getStartZ() - element.getStartZ()) * uratio;
+					double vstartNew = vstart + ((element.getHeight() - e.getHeight()) - (e.getStartY() - element.getStartY())) * vratio;
 					
-					uend = ((uend - ustart) * e.getDepth()/element.getDepth()) + ustartNew;
-					vend = ((vend - vstart) * e.getHeight()/element.getHeight()) + vstartNew;
+					uend = (udiff * e.getDepth()/element.getDepth()) + ustartNew;
+					vend = (vdiff * e.getHeight()/element.getHeight()) + vstartNew;
 
 					ustart = ustartNew;
 					vstart = vstartNew;
 					break;
 				}
 				case 4: {
-					double ustartNew = ustart + e.getStartX() - element.getStartX();
-					double vstartNew = vstart + e.getStartZ() - element.getStartZ();
+					double ustartNew = ustart + (e.getStartX() - element.getStartX()) * uratio;
+					double vstartNew = vstart + (e.getStartZ() - element.getStartZ()) * vratio;
 					
-					uend = ((uend - ustart) * e.getWidth()/element.getWidth()) + ustartNew;
-					vend = ((vend - vstart) * e.getDepth()/element.getDepth()) + vstartNew;
+					uend = (udiff * e.getWidth()/element.getWidth()) + ustartNew;
+					vend = (vdiff * e.getDepth()/element.getDepth()) + vstartNew;
 					
 					ustart = ustartNew;
 					vstart = vstartNew;
 					break;
 				}
 				case 5: {
-					double ustartNew = ustart + e.getStartX() - element.getStartX();
-					double vstartNew = vstart + (element.getDepth() - e.getDepth()) - (e.getStartZ() - element.getStartZ());
+					double ustartNew = ustart + (e.getStartX() - element.getStartX()) * uratio;
+					double vstartNew = vstart + ((element.getDepth() - e.getDepth()) - (e.getStartZ() - element.getStartZ())) * vratio;
 					
-					uend = ((uend - ustart) * e.getWidth()/element.getWidth()) + ustartNew;
-					vend = ((vend - vstart) * e.getDepth()/element.getDepth()) + vstartNew;
+					uend = (udiff * e.getWidth()/element.getWidth()) + ustartNew;
+					vend = (vdiff * e.getDepth()/element.getDepth()) + vstartNew;
 
 					ustart = ustartNew;
 					vstart = vstartNew;
