@@ -741,39 +741,74 @@ public class ModelCreator extends JFrame
 				
 				double ustart = f.getStartU();
 				double vstart = f.getStartV();
+				double uend = f.getEndU();
+				double vend = f.getEndV();
 				
 				switch(f.getSide()) {
 				case 0: {
-					ustart += (element.getWidth() - e.getWidth()) - (e.getStartX() - element.getStartX());
-					vstart += (element.getHeight() - e.getHeight()) - (e.getStartY() - element.getStartY());
+					double ustartNew = ustart + (element.getWidth() - e.getWidth()) - (e.getStartX() - element.getStartX());
+					double vstartNew = vstart + (element.getHeight() - e.getHeight()) - (e.getStartY() - element.getStartY());
+					
+					uend = ((uend - ustart) * e.getWidth()/element.getWidth()) + ustartNew;
+					vend = ((vend - vstart) * e.getHeight()/element.getHeight()) + vstartNew;
+
+					ustart = ustartNew;
+					vstart = vstartNew;
 					break;
 				}
 				case 1: {
-					ustart += (element.getDepth() - e.getDepth()) - (e.getStartZ() - element.getStartZ());
-					vstart += (element.getHeight() - e.getHeight()) - (e.getStartY() - element.getStartY());
+					double ustartNew = ustart + (element.getDepth() - e.getDepth()) - (e.getStartZ() - element.getStartZ());
+					double vstartNew = vstart + (element.getHeight() - e.getHeight()) - (e.getStartY() - element.getStartY());
+					
+					uend = ((uend - ustart) * e.getDepth()/element.getDepth()) + ustartNew;
+					vend = ((vend - vstart) * e.getHeight()/element.getHeight()) + vstartNew;
+
+					ustart = ustartNew;
+					vstart = vstartNew;
 					break;
 				}
-				//works
 				case 2: {
-					ustart += e.getStartX() - element.getStartX();
-					vstart += (element.getHeight() - e.getHeight()) - (e.getStartY() - element.getStartY());
+					double ustartNew = ustart + e.getStartX() - element.getStartX();
+					double vstartNew = vstart + (element.getHeight() - e.getHeight()) - (e.getStartY() - element.getStartY());
+					
+					uend = ((uend - ustart) * e.getWidth()/element.getWidth()) + ustartNew;
+					vend = ((vend - vstart) * e.getHeight()/element.getHeight()) + vstartNew;
+
+					ustart = ustartNew;
+					vstart = vstartNew;
 					break;
 				}
-				//works
 				case 3: {
-					ustart += e.getStartZ() - element.getStartZ();
-					vstart += (element.getHeight() - e.getHeight()) - (e.getStartY() - element.getStartY());
+					double ustartNew = ustart + e.getStartZ() - element.getStartZ();
+					double vstartNew = vstart + (element.getHeight() - e.getHeight()) - (e.getStartY() - element.getStartY());
+					
+					uend = ((uend - ustart) * e.getDepth()/element.getDepth()) + ustartNew;
+					vend = ((vend - vstart) * e.getHeight()/element.getHeight()) + vstartNew;
+
+					ustart = ustartNew;
+					vstart = vstartNew;
 					break;
 				}
-				//works
 				case 4: {
-					ustart += e.getStartX() - element.getStartX();
-					vstart += e.getStartZ() - element.getStartZ();
+					double ustartNew = ustart + e.getStartX() - element.getStartX();
+					double vstartNew = vstart + e.getStartZ() - element.getStartZ();
+					
+					uend = ((uend - ustart) * e.getWidth()/element.getWidth()) + ustartNew;
+					vend = ((vend - vstart) * e.getDepth()/element.getDepth()) + vstartNew;
+					
+					ustart = ustartNew;
+					vstart = vstartNew;
 					break;
 				}
 				case 5: {
-					ustart += e.getStartX() - element.getStartX();
-					vstart += (element.getDepth() - e.getDepth()) - (e.getStartZ() - element.getStartZ());
+					double ustartNew = ustart + e.getStartX() - element.getStartX();
+					double vstartNew = vstart + (element.getDepth() - e.getDepth()) - (e.getStartZ() - element.getStartZ());
+					
+					uend = ((uend - ustart) * e.getWidth()/element.getWidth()) + ustartNew;
+					vend = ((vend - vstart) * e.getDepth()/element.getDepth()) + vstartNew;
+
+					ustart = ustartNew;
+					vstart = vstartNew;
 					break;
 				}
 				}
@@ -781,6 +816,8 @@ public class ModelCreator extends JFrame
 				of.setAutoUVEnabled(f.isAutoUVEnabled());
 				of.setStartU(ustart);
 				of.setStartV(vstart);
+				of.setEndU(uend);
+				of.setEndV(vend);
 				of.setRotation(f.getRotation());
 				
 				of.setTexture(f.getTextureName());
