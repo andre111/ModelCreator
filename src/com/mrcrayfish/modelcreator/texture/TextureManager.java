@@ -7,12 +7,15 @@ import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.Image;
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.imageio.ImageIO;
 import javax.swing.DefaultListModel;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -28,7 +31,12 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 
 import org.newdawn.slick.opengl.Texture;
 import org.newdawn.slick.opengl.TextureLoader;
+import org.newdawn.slick.util.BufferedImageUtil;
 
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import com.mrcrayfish.modelcreator.element.ElementManager;
 import com.mrcrayfish.modelcreator.panels.SidebarPanel;
 
@@ -62,9 +70,9 @@ public class TextureManager
 		return true;
 	}
 
-	public static boolean loadExternalTexture(String path, String file) throws IOException
+	public static boolean loadExternalTexture(String path, String fileName) throws IOException
 	{
-		FileInputStream is = new FileInputStream(new File(path + "/" + file));
+		/*FileInputStream is = new FileInputStream(new File(path + "/" + fileName));
 		Texture texture = TextureLoader.getTexture("PNG", is);
 		is.close();
 		if (texture.getImageHeight() % 16 != 0 | texture.getImageWidth() % 16 != 0)
@@ -72,8 +80,103 @@ public class TextureManager
 			texture.release();
 			return false;
 		}
-		ImageIcon image = upscale(new ImageIcon(path + "/" + file));
-		textureCache.add(new TextureEntry(file.replace(".png", ""), texture, image));
+		ImageIcon image = upscale(new ImageIcon(path + "/" + fileName));
+		textureCache.add(new TextureEntry(fileName.replace(".png", ""), texture, image));*/
+		
+		
+		File file = new File(path + File.separator + fileName);
+		if(file.exists()) {
+			BufferedImage bimage = ImageIO.read(file);
+			
+			JsonObject animation = null;
+			File mcMetaFile = new File(path + File.separator + fileName + ".mcmeta");
+			if(mcMetaFile.exists()) {
+				JsonParser parser = new JsonParser();
+				JsonElement read = parser.parse(new FileReader(mcMetaFile));
+				
+				if(read.isJsonObject()) {
+					JsonObject mcMeta = read.getAsJsonObject();
+					if(mcMeta.has("animation") && mcMeta.get("animation").isJsonObject()) {
+						animation = mcMeta.get("animation").getAsJsonObject();
+					}
+				}
+			}
+			
+			if(animation==null) {
+				Texture texture = BufferedImageUtil.getTexture("", bimage);
+				ImageIcon image = upscale(new ImageIcon(path + "/" + fileName));
+				
+				textureCache.add(new TextureEntry(fileName.replace(".png", ""), texture, image));
+			} else {
+				TextureEntry entry = new TextureEntry(fileName.replace(".png", ""));
+				
+				//Split animation frames
+				int fWidth = 16;
+				int fHeight = 16;
+				if(animation.has("width") && animation.get("width").isJsonPrimitive()) {
+					fWidth = animation.get("width").getAsInt();
+				}
+				if(animation.has("height") && animation.get("height").isJsonPrimitive()) {
+					fHeight = animation.get("height").getAsInt();
+				}
+				int xpos = 0;
+				while(xpos + fWidth <= bimage.getWidth()) {
+					int ypos = 0;
+					while(ypos + fHeight <= bimage.getHeight()) {
+						BufferedImage subImage = bimage.getSubimage(xpos, ypos, fWidth, fHeight);
+						ImageIcon iconImage = upscale(new ImageIcon(subImage));
+						Texture texture = BufferedImageUtil.getTexture("", subImage);
+						
+						entry.addTexture(texture, iconImage);
+						
+						ypos += fHeight;
+					}
+					
+					xpos += fWidth;
+				}
+				
+				//set variables
+				int frametime = 1;
+				if(animation.has("frametime") && animation.get("frametime").isJsonPrimitive()) {
+					frametime = animation.get("frametime").getAsInt();
+				}
+				entry.setFrameTime(frametime);
+				
+				//set frames
+				if(animation.has("frames") && animation.get("frames").isJsonArray()) {
+					JsonArray frames = animation.get("frames").getAsJsonArray();
+					if(frames.size()>0) {
+						List<Integer> frameList = new ArrayList<Integer>();
+						
+						//TODO - custom frame times
+						for(int i=0; i<frames.size(); i++) {
+							JsonElement frame = frames.get(i);
+							
+							int index = 0;
+							int time = frametime;
+							if(frame.isJsonPrimitive()) {
+								index = frame.getAsInt();
+							} else if(frame.isJsonObject()) {
+								JsonObject frameObj = frame.getAsJsonObject();
+								
+								if(frameObj.has("index") && frameObj.get("index").isJsonPrimitive()) {
+									index = frameObj.get("index").getAsInt();
+								}
+								if(frameObj.has("time") && frameObj.get("time").isJsonPrimitive()) {
+									time = frameObj.get("time").getAsInt();
+								}
+							}
+							
+							frameList.add(index);
+						}
+						
+						entry.setFrames(frameList);
+					}
+				}
+				
+				textureCache.add(entry);
+			}
+		}
 		return true;
 	}
 
