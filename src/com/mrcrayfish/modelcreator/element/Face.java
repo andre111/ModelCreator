@@ -520,6 +520,11 @@ public class Face
 		return namePos;
 	}
 
+	public void setTexCoord(int corner)
+	{
+		setTexCoord(corner, textureU/16, textureUEnd/16, textureV/16, textureVEnd/16);
+	}
+	
 	public void setTexCoord(int corner, double uStart, double uEnd, double vStart, double vEnd)
 	{
 		int coord = corner + rotation;

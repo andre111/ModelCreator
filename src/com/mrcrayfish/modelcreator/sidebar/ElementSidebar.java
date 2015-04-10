@@ -196,19 +196,19 @@ public class ElementSidebar implements Sidebar
 						GL11.glBegin(GL11.GL_QUADS);
 						{
 							if (face.isBinded())
-								GL11.glTexCoord2d(face.shouldFitTexture() ? 0 : (face.getStartU() / 16), face.shouldFitTexture() ? 1 : (face.getEndV() / 16));
+								face.setTexCoord(0);
 							GL11.glVertex2d(xstart, ystart + height);
 	
 							if (face.isBinded())
-								GL11.glTexCoord2d(face.shouldFitTexture() ? 1 : (face.getEndU() / 16), face.shouldFitTexture() ? 1 : (face.getEndV() / 16));
+								face.setTexCoord(1);
 							GL11.glVertex2d(xstart + width, ystart + height);
 	
 							if (face.isBinded())
-								GL11.glTexCoord2d(face.shouldFitTexture() ? 1 : (face.getEndU() / 16), face.shouldFitTexture() ? 0 : (face.getStartV() / 16));
+								face.setTexCoord(2);
 							GL11.glVertex2d(xstart + width, ystart);
 	
 							if (face.isBinded())
-								GL11.glTexCoord2d(face.shouldFitTexture() ? 0 : (face.getStartU() / 16), face.shouldFitTexture() ? 0 : (face.getStartV() / 16));
+								face.setTexCoord(3);
 							GL11.glVertex2d(xstart, ystart);
 						}
 						GL11.glEnd();
