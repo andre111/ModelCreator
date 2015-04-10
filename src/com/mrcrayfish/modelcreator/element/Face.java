@@ -1,8 +1,10 @@
 package com.mrcrayfish.modelcreator.element;
 
 import static org.lwjgl.opengl.GL11.GL_NEAREST;
+import static org.lwjgl.opengl.GL11.GL_LINEAR;
 import static org.lwjgl.opengl.GL11.GL_TEXTURE_2D;
 import static org.lwjgl.opengl.GL11.GL_TEXTURE_MAG_FILTER;
+import static org.lwjgl.opengl.GL11.GL_TEXTURE_MIN_FILTER;
 
 import org.lwjgl.opengl.GL11;
 import org.newdawn.slick.opengl.Texture;
@@ -541,6 +543,7 @@ public class Face
 	public void startRender()
 	{
 		GL11.glEnable(GL_TEXTURE_2D);
+		GL11.glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 		GL11.glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 
 		bindTexture();
@@ -564,6 +567,11 @@ public class Face
 			if(TextureManager.getTexture(texture)!=null) {
 				GL11.glColor3f(1.0F, 1.0F, 1.0F);
 				TextureManager.getTexture(texture).bind();
+				
+				if(TextureManager.getTextureEntry(texture).isBlurred()) {
+					GL11.glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+					GL11.glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+				}
 				binded = true;
 			}
 		}

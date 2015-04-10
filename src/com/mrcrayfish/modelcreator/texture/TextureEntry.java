@@ -17,6 +17,7 @@ public class TextureEntry
 	private List<Integer> frames = new ArrayList<Integer>();
 	private Map<Integer, Integer> customTimes = new HashMap<Integer, Integer>();
 	private int frametime;
+	private boolean blurred = false;
 
 	public TextureEntry(String name, Texture texture, ImageIcon image)
 	{
@@ -71,6 +72,14 @@ public class TextureEntry
 	public void setCustomTimes(Map<Integer, Integer> times) {
 		customTimes = new HashMap<Integer, Integer>();
 		customTimes.putAll(times);
+	}
+	
+	public void setBlurred(boolean blur) {
+		blurred = blur;
+	}
+	
+	public boolean isBlurred() {
+		return blurred;
 	}
 	
 	public int getCurrentAnimationFrame() {

@@ -21,8 +21,6 @@ import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 import javax.swing.border.EmptyBorder;
 
-import org.newdawn.slick.util.ResourceLoader;
-
 public class WelcomeDialog
 {
 	public static void show(JFrame parent)

@@ -9,7 +9,6 @@ import java.awt.GridLayout;
 import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -91,6 +90,7 @@ public class TextureManager
 			BufferedImage bimage = ImageIO.read(file);
 			
 			JsonObject animation = null;
+			JsonObject textureObj = null;
 			File mcMetaFile = new File(path + File.separator + fileName + ".mcmeta");
 			if(mcMetaFile.exists()) {
 				JsonParser parser = new JsonParser();
@@ -101,16 +101,20 @@ public class TextureManager
 					if(mcMeta.has("animation") && mcMeta.get("animation").isJsonObject()) {
 						animation = mcMeta.get("animation").getAsJsonObject();
 					}
+					if(mcMeta.has("texture") && mcMeta.get("texture").isJsonObject()) {
+						textureObj = mcMeta.get("texture").getAsJsonObject();
+					}
 				}
 			}
 			
+			TextureEntry entry = null;
 			if(animation==null) {
 				Texture texture = BufferedImageUtil.getTexture("", bimage);
 				ImageIcon image = upscale(new ImageIcon(path + "/" + fileName));
 				
-				textureCache.add(new TextureEntry(fileName.replace(".png", ""), texture, image));
+				entry = new TextureEntry(fileName.replace(".png", ""), texture, image);
 			} else {
-				TextureEntry entry = new TextureEntry(fileName.replace(".png", ""));
+				entry = new TextureEntry(fileName.replace(".png", ""));
 				
 				//Split animation frames
 				int fWidth = 16;
@@ -180,7 +184,17 @@ public class TextureManager
 						entry.setCustomTimes(customTimes);
 					}
 				}
-				
+			}
+			
+			//texture vars
+			if(textureObj!=null) {
+				if(textureObj.has("blur") && textureObj.get("blur").isJsonPrimitive()) {
+					boolean blur = textureObj.get("blur").getAsBoolean();
+					entry.setBlurred(blur);
+				}
+			}
+			
+			if(entry!=null) {
 				textureCache.add(entry);
 			}
 		}
@@ -194,6 +208,18 @@ public class TextureManager
 		return new ImageIcon(newimg);
 	}
 
+	public static synchronized TextureEntry getTextureEntry(String name)
+	{
+		for (TextureEntry entry : textureCache)
+		{
+			if (entry.getName().equalsIgnoreCase(name))
+			{
+				return entry;
+			}
+		}
+		return null;
+	}
+	
 	public static synchronized Texture getTexture(String name)
 	{
 		for (TextureEntry entry : textureCache)
