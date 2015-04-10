@@ -1,7 +1,9 @@
 package com.mrcrayfish.modelcreator.texture;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.swing.ImageIcon;
 
@@ -13,6 +15,7 @@ public class TextureEntry
 	private List<Texture> texture = new ArrayList<Texture>();
 	private List<ImageIcon> image = new ArrayList<ImageIcon>();
 	private List<Integer> frames = new ArrayList<Integer>();
+	private Map<Integer, Integer> customTimes = new HashMap<Integer, Integer>();
 	private int frametime;
 
 	public TextureEntry(String name, Texture texture, ImageIcon image)
@@ -65,26 +68,33 @@ public class TextureEntry
 		frames = new ArrayList<Integer>();
 		frames.addAll(frameList);
 	}
+	public void setCustomTimes(Map<Integer, Integer> times) {
+		customTimes = new HashMap<Integer, Integer>();
+		customTimes.putAll(times);
+	}
 	
 	public int getCurrentAnimationFrame() {
 		long maxTime = 0;
 		for(int i=0; i<frames.size(); i++) {
-			maxTime += getFrameTime(frames.get(i));
+			maxTime += getFrameTime(i);
 		}
 		
 		long animTime = System.currentTimeMillis() % maxTime;
 		
 		for(int i=0; i<frames.size(); i++) {
-			if(animTime<=getFrameTime(frames.get(i))) {
+			if(animTime<=getFrameTime(i)) {
 				return frames.get(i);
 			}
-			animTime -= getFrameTime(frames.get(i));
+			animTime -= getFrameTime(i);
 		}
 		
 		return 0;
 	}
 	
 	public long getFrameTime(int frame) {
+		if(customTimes.containsKey(frame)) {
+			return customTimes.get(frame);
+		}
 		return frametime * 50L;
 	}
 }

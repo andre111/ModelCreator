@@ -13,7 +13,9 @@ import java.io.FileInputStream;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.imageio.ImageIO;
 import javax.swing.DefaultListModel;
@@ -147,6 +149,7 @@ public class TextureManager
 					JsonArray frames = animation.get("frames").getAsJsonArray();
 					if(frames.size()>0) {
 						List<Integer> frameList = new ArrayList<Integer>();
+						Map<Integer, Integer> customTimes = new HashMap<Integer, Integer>();
 						
 						//TODO - custom frame times
 						for(int i=0; i<frames.size(); i++) {
@@ -168,9 +171,13 @@ public class TextureManager
 							}
 							
 							frameList.add(index);
+							if(time!=frametime) {
+								customTimes.put(frameList.size()-1, time);
+							}
 						}
 						
 						entry.setFrames(frameList);
+						entry.setCustomTimes(customTimes);
 					}
 				}
 				
