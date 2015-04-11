@@ -148,6 +148,11 @@ public class TextureManager
 				}
 				entry.setFrameTime(frametime);
 				
+				if(animation.has("interpolate") && animation.get("interpolate").isJsonPrimitive()) {
+					boolean interpolate = animation.get("interpolate").getAsBoolean();
+					entry.setInterpolate(interpolate);
+				}
+				
 				//set frames
 				if(animation.has("frames") && animation.get("frames").isJsonArray()) {
 					JsonArray frames = animation.get("frames").getAsJsonArray();

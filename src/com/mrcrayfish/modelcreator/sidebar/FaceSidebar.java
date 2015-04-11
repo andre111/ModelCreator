@@ -24,6 +24,7 @@ import org.newdawn.slick.Font;
 import com.mrcrayfish.modelcreator.element.Element;
 import com.mrcrayfish.modelcreator.element.ElementManager;
 import com.mrcrayfish.modelcreator.element.Face;
+import com.mrcrayfish.modelcreator.texture.TextureManager;
 
 public class FaceSidebar implements Sidebar
 {
@@ -190,7 +191,7 @@ public class FaceSidebar implements Sidebar
 				if(face!=null) {
 					GL11.glPushMatrix();
 					{
-						face.startRender();
+						face.startRender(0);
 	
 						GL11.glBegin(GL11.GL_QUADS);
 						{
@@ -215,6 +216,35 @@ public class FaceSidebar implements Sidebar
 						face.finishRender();
 					}
 					GL11.glPopMatrix();
+					if(TextureManager.getTextureEntry(face.getTextureName())!=null && TextureManager.getTextureEntry(face.getTextureName()).isInterpolated() && TextureManager.getTextureEntry(face.getTextureName()).getFrameCount()>1) {
+						GL11.glPushMatrix();
+						{
+							face.startRender(1);
+		
+							GL11.glBegin(GL11.GL_QUADS);
+							{
+								if (face.isBinded())
+									GL11.glTexCoord2d(0, 1);
+								GL11.glVertex2d(0, size);
+		
+								if (face.isBinded())
+									GL11.glTexCoord2d(1, 1);
+								GL11.glVertex2d(size, size);
+		
+								if (face.isBinded())
+									GL11.glTexCoord2d(1, 0);
+								GL11.glVertex2d(size, 0);
+		
+								if (face.isBinded())
+									GL11.glTexCoord2d(0, 0);
+								GL11.glVertex2d(0, 0);
+							}
+							GL11.glEnd();
+		
+							face.finishRender();
+						}
+						GL11.glPopMatrix();
+					}
 					
 					glColor3d(0.2, 0.2, 0.2);
 					glLineWidth(2F);

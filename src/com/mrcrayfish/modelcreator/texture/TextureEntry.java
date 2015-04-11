@@ -18,6 +18,7 @@ public class TextureEntry
 	private Map<Integer, Integer> customTimes = new HashMap<Integer, Integer>();
 	private int frametime;
 	private boolean blurred = false;
+	private boolean interpolate = false;
 
 	public TextureEntry(String name, Texture texture, ImageIcon image)
 	{
@@ -47,6 +48,11 @@ public class TextureEntry
 	public Texture getTexture()
 	{
 		return texture.get(getCurrentAnimationFrame());
+	}
+	
+	public Texture getNextTexture()
+	{
+		return texture.get(getNextAnimationFrame());
 	}
 	
 	public ImageIcon getImage()
@@ -82,6 +88,18 @@ public class TextureEntry
 		return blurred;
 	}
 	
+	public void setInterpolate(boolean interpolate) {
+		this.interpolate = interpolate;
+	}
+	
+	public boolean isInterpolated() {
+		return interpolate;
+	}
+	
+	public int getFrameCount() {
+		return frames.size();
+	}
+	
 	public int getCurrentAnimationFrame() {
 		long maxTime = 0;
 		for(int i=0; i<frames.size(); i++) {
@@ -100,10 +118,50 @@ public class TextureEntry
 		return 0;
 	}
 	
+	public int getNextAnimationFrame() {
+		long maxTime = 0;
+		for(int i=0; i<frames.size(); i++) {
+			maxTime += getFrameTime(i);
+		}
+		
+		long animTime = System.currentTimeMillis() % maxTime;
+		
+		for(int i=0; i<frames.size(); i++) {
+			if(animTime<=getFrameTime(i)) {
+				if(i<frames.size()-1)
+					return frames.get(i + 1);
+				else
+					return frames.get(0);
+			}
+			animTime -= getFrameTime(i);
+		}
+		
+		return 0;
+	}
+	
 	public long getFrameTime(int frame) {
 		if(customTimes.containsKey(frame)) {
 			return customTimes.get(frame);
 		}
 		return frametime * 50L;
+	}
+	
+	public double getFrameInterpolation() {
+		long maxTime = 0;
+		for(int i=0; i<frames.size(); i++) {
+			maxTime += getFrameTime(i);
+		}
+		
+		long animTime = System.currentTimeMillis() % maxTime;
+		
+		for(int i=0; i<frames.size(); i++) {
+			if(animTime<=getFrameTime(i)) {
+				double percent = animTime / (double) getFrameTime(i);
+				return percent;
+			}
+			animTime -= getFrameTime(i);
+		}
+		
+		return 0;
 	}
 }

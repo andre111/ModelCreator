@@ -10,6 +10,7 @@ import org.lwjgl.opengl.GL11;
 import org.newdawn.slick.opengl.Texture;
 import org.newdawn.slick.opengl.TextureImpl;
 
+import com.mrcrayfish.modelcreator.texture.TextureEntry;
 import com.mrcrayfish.modelcreator.texture.TextureManager;
 
 public class Face
@@ -35,12 +36,22 @@ public class Face
 		this.cuboid = cuboid;
 		this.side = side;
 	}
-
+	
 	public int renderNorth(boolean split, int namePos)
+	{
+		if(TextureManager.getTextureEntry(texture)!=null && TextureManager.getTextureEntry(texture).isInterpolated() && TextureManager.getTextureEntry(texture).getFrameCount()>1) {
+			renderNorth(0, split, namePos);
+			return renderNorth(1, split, namePos);
+		} else {
+			return renderNorth(0, split, namePos);
+		}
+	}
+
+	private int renderNorth(int pos, boolean split, int namePos)
 	{
 		GL11.glPushMatrix();
 		{
-			startRender();
+			startRender(pos);
 
 			double splitX = 1;
 			double splitY = 1;
@@ -118,12 +129,22 @@ public class Face
 		
 		return namePos;
 	}
-
+	
 	public int renderEast(boolean split, int namePos)
+	{
+		if(TextureManager.getTextureEntry(texture)!=null && TextureManager.getTextureEntry(texture).isInterpolated() && TextureManager.getTextureEntry(texture).getFrameCount()>1) {
+			renderEast(0, split, namePos);
+			return renderEast(1, split, namePos);
+		} else {
+			return renderEast(0, split, namePos);
+		}
+	}
+
+	private int renderEast(int pos, boolean split, int namePos)
 	{
 		GL11.glPushMatrix();
 		{
-			startRender();
+			startRender(pos);
 			
 			double splitZ = 1;
 			double splitY = 1;
@@ -201,9 +222,19 @@ public class Face
 
 	public int renderSouth(boolean split, int namePos)
 	{
+		if(TextureManager.getTextureEntry(texture)!=null && TextureManager.getTextureEntry(texture).isInterpolated() && TextureManager.getTextureEntry(texture).getFrameCount()>1) {
+			renderSouth(0, split, namePos);
+			return renderSouth(1, split, namePos);
+		} else {
+			return renderSouth(0, split, namePos);
+		}
+	}
+
+	private int renderSouth(int pos, boolean split, int namePos)
+	{
 		GL11.glPushMatrix();
 		{
-			startRender();
+			startRender(pos);
 
 			double splitX = 1;
 			double splitY = 1;
@@ -284,9 +315,19 @@ public class Face
 
 	public int renderWest(boolean split, int namePos)
 	{
+		if(TextureManager.getTextureEntry(texture)!=null && TextureManager.getTextureEntry(texture).isInterpolated() && TextureManager.getTextureEntry(texture).getFrameCount()>1) {
+			renderWest(0, split, namePos);
+			return renderWest(1, split, namePos);
+		} else {
+			return renderWest(0, split, namePos);
+		}
+	}
+
+	private int renderWest(int pos, boolean split, int namePos)
+	{
 		GL11.glPushMatrix();
 		{
-			startRender();
+			startRender(pos);
 
 			double splitZ = 1;
 			double splitY = 1;
@@ -364,9 +405,19 @@ public class Face
 
 	public int renderUp(boolean split, int namePos)
 	{
+		if(TextureManager.getTextureEntry(texture)!=null && TextureManager.getTextureEntry(texture).isInterpolated() && TextureManager.getTextureEntry(texture).getFrameCount()>1) {
+			renderUp(0, split, namePos);
+			return renderUp(1, split, namePos);
+		} else {
+			return renderUp(0, split, namePos);
+		}
+	}
+
+	private int renderUp(int pos, boolean split, int namePos)
+	{
 		GL11.glPushMatrix();
 		{
-			startRender();
+			startRender(pos);
 			
 			double splitX = 1;
 			double splitZ = 1;
@@ -444,9 +495,19 @@ public class Face
 
 	public int renderDown(boolean split, int namePos)
 	{
+		if(TextureManager.getTextureEntry(texture)!=null && TextureManager.getTextureEntry(texture).isInterpolated() && TextureManager.getTextureEntry(texture).getFrameCount()>1) {
+			renderDown(0, split, namePos);
+			return renderDown(1, split, namePos);
+		} else {
+			return renderDown(0, split, namePos);
+		}
+	}
+
+	private int renderDown(int pos, boolean split, int namePos)
+	{
 		GL11.glPushMatrix();
 		{
-			startRender();
+			startRender(pos);
 			
 			double splitX = 1;
 			double splitZ = 1;
@@ -540,18 +601,20 @@ public class Face
 			GL11.glTexCoord2d(uStart, vStart);
 	}
 
-	public void startRender()
+	public void startRender(int pos)
 	{
 		GL11.glEnable(GL_TEXTURE_2D);
 		GL11.glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 		GL11.glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 
-		bindTexture();
+		bindTexture(pos);
 	}
 
 	public void finishRender()
 	{
 		GL11.glDisable(GL_TEXTURE_2D);
+		GL11.glDisable(GL11.GL_BLEND);
+		GL11.glDepthFunc(GL11.GL_LESS);
 	}
 
 	public void setTexture(String texture)
@@ -559,14 +622,28 @@ public class Face
 		this.texture = texture;
 	}
 
-	public void bindTexture()
+	public void bindTexture(int pos)
 	{
 		TextureImpl.bindNone();
 		if (texture != null)
 		{
-			if(TextureManager.getTexture(texture)!=null) {
-				GL11.glColor3f(1.0F, 1.0F, 1.0F);
-				TextureManager.getTexture(texture).bind();
+			TextureEntry entry = TextureManager.getTextureEntry(texture);
+			if(entry!=null) {
+				if(pos==0) {
+					if(entry.getTexture()!=null) {
+						GL11.glColor3f(1.0F, 1.0F, 1.0F);
+						entry.getTexture().bind();
+					}
+				} else if(pos==1) {
+					if(entry.getNextTexture()!=null) {
+						GL11.glEnable(GL11.GL_BLEND);
+						GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+						GL11.glDepthFunc(GL11.GL_EQUAL);
+						
+						entry.getNextTexture().bind();
+						GL11.glColor4d(1.0D, 1.0D, 1.0D, entry.getFrameInterpolation());
+					}
+				}
 				
 				if(TextureManager.getTextureEntry(texture).isBlurred()) {
 					GL11.glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
