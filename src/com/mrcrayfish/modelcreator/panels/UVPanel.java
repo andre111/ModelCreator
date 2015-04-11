@@ -4,6 +4,10 @@ import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
+import java.awt.event.FocusAdapter;
+import java.awt.event.FocusEvent;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.text.DecimalFormat;
 
 import javax.swing.BorderFactory;
@@ -14,6 +18,7 @@ import javax.swing.JTextField;
 import com.mrcrayfish.modelcreator.element.Element;
 import com.mrcrayfish.modelcreator.element.ElementManager;
 import com.mrcrayfish.modelcreator.element.Face;
+import com.mrcrayfish.modelcreator.util.Parser;
 
 public class UVPanel extends JPanel implements IValueUpdater
 {
@@ -69,23 +74,155 @@ public class UVPanel extends JPanel implements IValueUpdater
 		Font defaultFont = new Font("SansSerif", Font.BOLD, 20);
 		xStartField.setSize(new Dimension(62, 30));
 		xStartField.setFont(defaultFont);
-		xStartField.setEditable(false);
 		xStartField.setHorizontalAlignment(JTextField.CENTER);
+		xStartField.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyPressed(KeyEvent e) {
+				if (e.getKeyCode() == KeyEvent.VK_ENTER) {
+					Element element = manager.getSelectedCuboid();
+					if(element != null) {
+						Face face = element.getSelectedFace();
+						face.setStartU((Parser.parseDouble(xStartField.getText(), face.getStartU())));
+						face.updateUV();
+						manager.updateValues();
+					}	
+				}
+			}
+		});
+		xStartField.addFocusListener(new FocusAdapter() {
+			@Override
+			public void focusLost(FocusEvent e) {
+				Element element = manager.getSelectedCuboid();
+				if(element != null) {
+					Face face = element.getSelectedFace();
+					face.setStartU((Parser.parseDouble(xStartField.getText(), face.getStartU())));
+					face.updateUV();
+					manager.updateValues();
+				}	
+			}
+		});
 
 		yStartField.setSize(new Dimension(62, 30));
 		yStartField.setFont(defaultFont);
-		yStartField.setEditable(false);
 		yStartField.setHorizontalAlignment(JTextField.CENTER);
+		yStartField.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyPressed(KeyEvent e) {
+				if (e.getKeyCode() == KeyEvent.VK_ENTER) {
+					Element element = manager.getSelectedCuboid();
+					if(element != null) {
+						Face face = element.getSelectedFace();
+						face.setStartV((Parser.parseDouble(yStartField.getText(), face.getStartV())));
+						face.updateUV();
+						manager.updateValues();
+					}	
+				}
+			}
+		});
+		yStartField.addFocusListener(new FocusAdapter() {
+			@Override
+			public void focusLost(FocusEvent e) {
+				Element element = manager.getSelectedCuboid();
+				if(element != null) {
+					Face face = element.getSelectedFace();
+					face.setStartV((Parser.parseDouble(yStartField.getText(), face.getStartV())));
+					face.updateUV();
+					manager.updateValues();
+				}	
+			}
+		});
 		
 		xEndField.setSize(new Dimension(62, 30));
 		xEndField.setFont(defaultFont);
-		xEndField.setEditable(false);
 		xEndField.setHorizontalAlignment(JTextField.CENTER);
+		xEndField.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyPressed(KeyEvent e) {
+				if (e.getKeyCode() == KeyEvent.VK_ENTER) {
+					Element element = manager.getSelectedCuboid();
+					if(element != null) {
+						Face face = element.getSelectedFace();
+						face.setEndU((Parser.parseDouble(xEndField.getText(), face.getEndU())));
+						
+						if(face.getEndU()-face.getStartU()!=element.getFaceDimension(face.getSide()).getWidth()
+						|| face.getEndV()-face.getStartV()!=element.getFaceDimension(face.getSide()).getHeight()) {
+							face.setAutoUVEnabled(false);
+						} else {
+							face.setAutoUVEnabled(true);
+						}
+						
+						face.updateUV();
+						manager.updateValues();
+					}	
+				}
+			}
+		});
+		xEndField.addFocusListener(new FocusAdapter() {
+			@Override
+			public void focusLost(FocusEvent e) {
+				Element element = manager.getSelectedCuboid();
+				if(element != null) {
+					Face face = element.getSelectedFace();
+					face.setEndU((Parser.parseDouble(xEndField.getText(), face.getEndU())));
+					
+					if(face.getEndU()-face.getStartU()!=element.getFaceDimension(face.getSide()).getWidth()
+					|| face.getEndV()-face.getStartV()!=element.getFaceDimension(face.getSide()).getHeight()) {
+						face.setAutoUVEnabled(false);
+					} else {
+						face.setAutoUVEnabled(true);
+					}
+							
+					face.updateUV();
+					manager.updateValues();
+				}	
+			}
+		});
 
 		yEndField.setSize(new Dimension(62, 30));
 		yEndField.setFont(defaultFont);
-		yEndField.setEditable(false);
 		yEndField.setHorizontalAlignment(JTextField.CENTER);
+		yEndField.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyPressed(KeyEvent e) {
+				if (e.getKeyCode() == KeyEvent.VK_ENTER) {
+					Element element = manager.getSelectedCuboid();
+					if(element != null) {
+						Face face = element.getSelectedFace();
+						face.setEndV((Parser.parseDouble(yEndField.getText(), face.getEndV())));
+						
+						if(face.getEndU()-face.getStartU()!=element.getFaceDimension(face.getSide()).getWidth()
+						|| face.getEndV()-face.getStartV()!=element.getFaceDimension(face.getSide()).getHeight()) {
+							face.setAutoUVEnabled(false);
+						} else {
+							face.setAutoUVEnabled(true);
+						}
+								
+						face.updateUV();
+						manager.updateValues();
+					}	
+				}
+			}
+		});
+		yEndField.addFocusListener(new FocusAdapter() {
+			@Override
+			public void focusLost(FocusEvent e) {
+				Element element = manager.getSelectedCuboid();
+				if(element != null) {
+					Face face = element.getSelectedFace();
+					face.setEndV((Parser.parseDouble(yEndField.getText(), face.getEndV())));
+					
+					if(face.getEndU()-face.getStartU()!=element.getFaceDimension(face.getSide()).getWidth()
+					|| face.getEndV()-face.getStartV()!=element.getFaceDimension(face.getSide()).getHeight()) {
+						face.setAutoUVEnabled(false);
+					} else {
+						face.setAutoUVEnabled(true);
+					}
+							
+					face.updateUV();
+					manager.updateValues();
+				}	
+			}
+		});
 
 		btnPlusX.addActionListener(e ->
 		{
@@ -285,6 +422,10 @@ public class UVPanel extends JPanel implements IValueUpdater
 	{
 		if (cube != null)
 		{
+			xStartField.setEnabled(true);
+			yStartField.setEnabled(true);
+			xEndField.setEnabled(true);
+			yEndField.setEnabled(true);
 			xStartField.setText(df.format(cube.getSelectedFace().getStartU()));
 			yStartField.setText(df.format(cube.getSelectedFace().getStartV()));
 			xEndField.setText(df.format(cube.getSelectedFace().getEndU()));
@@ -292,6 +433,10 @@ public class UVPanel extends JPanel implements IValueUpdater
 		}
 		else
 		{
+			xStartField.setEnabled(false);
+			yStartField.setEnabled(false);
+			xEndField.setEnabled(false);
+			yEndField.setEnabled(false);
 			xStartField.setText("");
 			yStartField.setText("");
 			xEndField.setText("");

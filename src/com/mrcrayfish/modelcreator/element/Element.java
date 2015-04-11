@@ -679,6 +679,21 @@ public class Element
 	{
 		this.depth += amt;
 	}
+	
+	public void setWidth(double width)
+	{
+		this.width = width;
+	}
+
+	public void setHeight(double height)
+	{
+		this.height = height;
+	}
+
+	public void setDepth(double depth)
+	{
+		this.depth = depth;
+	}
 
 	public double getOriginX()
 	{
