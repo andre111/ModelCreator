@@ -52,6 +52,7 @@ public class TexturePanel extends JPanel implements TextureCallback
 				if (texture != null)
 				{
 					manager.getSelectedCuboid().getSelectedFace().setTexture(texture);
+					manager.getSelectedCuboid().getSelectedFace().setTextureLocation("blocks/");
 				}
 			}
 		});
