@@ -49,7 +49,7 @@ public class TextureManager
 
 	public static File lastLocation = null;
 
-	public static boolean loadExternalTexture(String path, String fileName) throws IOException
+	public static boolean loadExternalTexture(String path, String fileName, File metaFile) throws IOException
 	{
 		/*FileInputStream is = new FileInputStream(new File(path + "/" + fileName));
 		Texture texture = TextureLoader.getTexture("PNG", is);
@@ -69,7 +69,10 @@ public class TextureManager
 			
 			JsonObject animation = null;
 			JsonObject textureObj = null;
-			File mcMetaFile = new File(path + File.separator + fileName + ".mcmeta");
+			File mcMetaFile = metaFile;
+			if(mcMetaFile==null || !mcMetaFile.exists()) {
+				mcMetaFile = new File(path + File.separator + fileName + ".mcmeta");
+			}
 			if(mcMetaFile.exists()) {
 				JsonParser parser = new JsonParser();
 				JsonElement read = parser.parse(new FileReader(mcMetaFile));
@@ -92,7 +95,7 @@ public class TextureManager
 				
 				entry = new TextureEntry(fileName.replace(".png", "").replaceAll("\\d*$", ""), texture, image, path + "/" + fileName);
 			} else {
-				entry = new TextureEntry(fileName.replace(".png", ""));
+				entry = new TextureEntry(fileName.replace(".png", "").replaceAll("\\d*$", ""), path + "/" + fileName);
 				
 				//Split animation frames
 				int fWidth = 16;
@@ -287,7 +290,7 @@ public class TextureManager
 				lastLocation = chooser.getSelectedFile().getParentFile();
 				try
 				{
-					manager.addPendingTexture(new PendingTexture(chooser.getSelectedFile().getAbsolutePath(), new TextureCallback()
+					manager.addPendingTexture(new PendingTexture(chooser.getSelectedFile().getAbsolutePath(), null, new TextureCallback()
 					{
 						@Override
 						public void callback(boolean success, String texture)

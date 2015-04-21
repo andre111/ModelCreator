@@ -9,6 +9,7 @@ import java.util.List;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.util.glu.Sphere;
 
+import com.mrcrayfish.modelcreator.ModelCreator;
 import com.mrcrayfish.modelcreator.util.FaceDimension;
 
 public class Element
@@ -157,6 +158,8 @@ public class Element
 	{
 		GL11.glPushMatrix();
 		{
+			if(ModelCreator.transparent)
+				GL11.glEnable(GL11.GL_BLEND);
 			GL11.glEnable(GL_CULL_FACE);
 			GL11.glTranslated(getOriginX(), getOriginY(), getOriginZ());
 			rotateAxis();

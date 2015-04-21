@@ -21,8 +21,7 @@ public class TextureEntry
 	private boolean blurred = false;
 	private boolean interpolate = false;
 
-	public TextureEntry(String name, Texture texture, ImageIcon image, String location)
-	{
+	public TextureEntry(String name, Texture texture, ImageIcon image, String location) {
 		this.name = name;
 		this.location = location;
 		
@@ -33,8 +32,9 @@ public class TextureEntry
 		frametime = 1;
 	}
 	
-	public TextureEntry(String name) {
+	public TextureEntry(String name, String location) {
 		this.name = name;
+		this.location = location;
 	}
 
 	public String getName()

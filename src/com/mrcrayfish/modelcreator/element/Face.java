@@ -613,7 +613,6 @@ public class Face
 	public void finishRender()
 	{
 		GL11.glDisable(GL_TEXTURE_2D);
-		GL11.glDisable(GL11.GL_BLEND);
 		GL11.glDepthFunc(GL11.GL_LESS);
 	}
 

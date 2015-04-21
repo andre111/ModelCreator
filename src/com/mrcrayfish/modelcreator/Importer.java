@@ -137,14 +137,14 @@ public class Importer
 			if (textureDir.exists() && textureDir.isDirectory()) {
 				File textureFile = new File(textureDir, texture + ".png");
 				if (textureFile.exists() && textureFile.isFile()) {
-					manager.addPendingTexture(new PendingTexture(textureFile.getAbsolutePath(), null));
+					manager.addPendingTexture(new PendingTexture(textureFile.getAbsolutePath(), null, null));
 					return;
 				}
 			}
 		}
 
 		if (new File(ModelCreator.texturePath + File.separator + texture + ".png").exists()) {
-			manager.addPendingTexture(new PendingTexture(ModelCreator.texturePath + File.separator + texture + ".png", null));
+			manager.addPendingTexture(new PendingTexture(ModelCreator.texturePath + File.separator + texture + ".png", null, null));
 		}
 	}
 

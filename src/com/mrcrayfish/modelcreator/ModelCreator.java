@@ -45,16 +45,12 @@ import com.mrcrayfish.modelcreator.sidebar.Sidebar;
 import com.mrcrayfish.modelcreator.texture.PendingTexture;
 import com.mrcrayfish.modelcreator.util.FaceDimension;
 
-//NOW WORKING AGAIN(NO UV SUPPORT AS OF NOW):
-//WARNING: THIS BRANCH IS COMPLETTLY BUGGED FROM THE ATTEMPT TO ENABLE SINGLE PIXEL REMOVAL
-//			ONLY THE NORTH SIDE IS IMPLEMENTED AND WORKS
-//			EAST IS IMPLEMENTED BUT DOESNT WORK AT ALL
 public class ModelCreator extends JFrame
 {
 	private static final long serialVersionUID = 1L;
 	
-	//TODO remove static instance
 	public static String texturePath = ".";
+	public static boolean transparent = false;
 	
 	public static final Sidebar ELEMENT_SIDE_BAR = new ElementSidebar();
 	public static final Sidebar FACE_SIDE_BAR = new FaceSidebar();
