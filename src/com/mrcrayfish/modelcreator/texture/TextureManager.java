@@ -31,7 +31,6 @@ import javax.swing.SwingUtilities;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
 import org.newdawn.slick.opengl.Texture;
-import org.newdawn.slick.opengl.TextureLoader;
 import org.newdawn.slick.util.BufferedImageUtil;
 
 import com.google.gson.JsonArray;
@@ -49,27 +48,6 @@ public class TextureManager
 	public static Texture dirt;
 
 	public static File lastLocation = null;
-
-	public static void init()
-	{
-		try
-		{
-			loadInternalTexture("brick");
-			loadInternalTexture("dirt");
-		}
-		catch (IOException e)
-		{
-			e.printStackTrace();
-		}
-	}
-
-	private static boolean loadInternalTexture(String file) throws IOException
-	{
-		Texture texture = TextureLoader.getTexture("PNG", TextureManager.class.getClassLoader().getResourceAsStream(file + ".png"));
-		ImageIcon image = upscale(new ImageIcon(TextureManager.class.getClassLoader().getResource(file + ".png")));
-		textureCache.add(new TextureEntry(file, texture, image));
-		return true;
-	}
 
 	public static boolean loadExternalTexture(String path, String fileName) throws IOException
 	{
@@ -112,7 +90,7 @@ public class TextureManager
 				Texture texture = BufferedImageUtil.getTexture("", bimage);
 				ImageIcon image = upscale(new ImageIcon(path + "/" + fileName));
 				
-				entry = new TextureEntry(fileName.replace(".png", ""), texture, image);
+				entry = new TextureEntry(fileName.replace(".png", "").replaceAll("\\d*$", ""), texture, image, path + "/" + fileName);
 			} else {
 				entry = new TextureEntry(fileName.replace(".png", ""));
 				
@@ -213,7 +191,7 @@ public class TextureManager
 		return new ImageIcon(newimg);
 	}
 
-	public static synchronized TextureEntry getTextureEntry(String name)
+	public static TextureEntry getTextureEntry(String name)
 	{
 		for (TextureEntry entry : textureCache)
 		{
@@ -225,7 +203,7 @@ public class TextureManager
 		return null;
 	}
 	
-	public static synchronized Texture getTexture(String name)
+	public static Texture getTexture(String name)
 	{
 		for (TextureEntry entry : textureCache)
 		{
@@ -236,8 +214,20 @@ public class TextureManager
 		}
 		return null;
 	}
+	
+	public static String getTextureLocation(String name)
+	{
+		for (TextureEntry entry : textureCache)
+		{
+			if (entry.getName().equalsIgnoreCase(name))
+			{
+				return entry.getLocation();
+			}
+		}
+		return null;
+	}
 
-	public static synchronized ImageIcon getIcon(String name)
+	public static ImageIcon getIcon(String name)
 	{
 		for (TextureEntry entry : textureCache)
 		{

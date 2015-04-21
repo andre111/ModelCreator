@@ -143,10 +143,10 @@ public class ElementSidebar implements Sidebar
 			//Cubes
 			GL11.glEnable(GL11.GL_BLEND);
 			GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
-			for (int i = 0; i < manager.getCuboidCount(); i++)
+			for (int i = 0; i < manager.getElementCount(); i++)
 			{
-				Element cube = manager.getCuboid(i);
-				if(!(cube).equals(manager.getSelectedCuboid()))
+				Element cube = manager.getElement(i);
+				if(!(cube).equals(manager.getSelectedElement()))
 					continue;
 					
 				Face face = null;
@@ -310,10 +310,10 @@ public class ElementSidebar implements Sidebar
 					if(Mouse.isButtonDown(0) || Mouse.isButtonDown(1)) {
 						if(sidebarClickedElement==null) {
 							//Cubes
-							for (int c = 0; c < manager.getCuboidCount(); c++)
+							for (int c = 0; c < manager.getElementCount(); c++)
 							{
-								Element cube = manager.getCuboid(c);
-								if(!cube.equals(manager.getSelectedCuboid()))
+								Element cube = manager.getElement(c);
+								if(!cube.equals(manager.getSelectedElement()))
 									continue;
 									
 								double xstart = 0;

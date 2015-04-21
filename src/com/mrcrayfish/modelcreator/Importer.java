@@ -16,7 +16,6 @@ import com.mrcrayfish.modelcreator.element.Element;
 import com.mrcrayfish.modelcreator.element.ElementManager;
 import com.mrcrayfish.modelcreator.element.Face;
 import com.mrcrayfish.modelcreator.texture.PendingTexture;
-import com.mrcrayfish.modelcreator.texture.TextureCallback;
 
 public class Importer
 {
@@ -76,7 +75,7 @@ public class Importer
 				
 				if(file.exists()) {
 					//load textures
-					loadTextures(obj);
+					loadTextures(file, obj);
 					
 					//Load Parent
 					FileReader fr = new FileReader(file);
@@ -90,7 +89,7 @@ public class Importer
 			}
 			
 			//load textures
-			loadTextures(obj);
+			loadTextures(dir, obj);
 			
 			//load elements
 			if(obj.has("elements") && obj.get("elements").isJsonArray()) {
@@ -110,32 +109,45 @@ public class Importer
 		}
 	}
 	
-	private void loadTextures(JsonObject obj) {
+	private void loadTextures(File file, JsonObject obj) {
 		if(obj.has("textures") && obj.get("textures").isJsonObject()) {
 			JsonObject textures = obj.get("textures").getAsJsonObject();
 			
 			for(Entry<String, JsonElement> entry : textures.entrySet()) {
 				if(entry.getValue().isJsonPrimitive()) {
 					String texture = entry.getValue().getAsString();
-					
+
 					if(texture.startsWith("#")) {
-						textureMap.put(entry.getKey(), textureMap.get(texture.replaceFirst("#", "")));
-						System.out.println(entry.getKey()+" loaded "+texture+" -> "+textureMap.get(texture.replaceFirst("#", "")));
+						System.out.println("1. Adding key '" + entry.getKey() + "' with texture '" + textureMap.get(texture.replace("#", "")) + "'.");
+						textureMap.put(entry.getKey(), textureMap.get(texture.replace("#", "")));
 					} else {
-						System.out.println(entry.getKey()+" loaded "+texture);
-						textureMap.put(entry.getKey(), texture);
-						if(new File(ModelCreator.texturePath+File.separator+texture+".png").exists()) {
-							manager.addPendingTexture(new PendingTexture(ModelCreator.texturePath+File.separator+texture+".png", new TextureCallback(){
-								@Override
-								public void callback(boolean success, String texture) {}
-							}));
-						}
+						System.out.println("2. Adding key '" + entry.getKey().replace("#", "") + "' with texture '" + texture + "'.");
+						textureMap.put(entry.getKey().replace("#", ""), texture);
+						loadTexture(file, texture);
 					}
 				}
 			}
 		}
 	}
 	
+	private void loadTexture(File file, String texture) {
+		File assets = file.getParentFile().getParentFile();
+		if (assets != null) {
+			File textureDir = new File(assets, "textures/");
+			if (textureDir.exists() && textureDir.isDirectory()) {
+				File textureFile = new File(textureDir, texture + ".png");
+				if (textureFile.exists() && textureFile.isFile()) {
+					manager.addPendingTexture(new PendingTexture(textureFile.getAbsolutePath(), null));
+					return;
+				}
+			}
+		}
+
+		if (new File(ModelCreator.texturePath + File.separator + texture + ".png").exists()) {
+			manager.addPendingTexture(new PendingTexture(ModelCreator.texturePath + File.separator + texture + ".png", null));
+		}
+	}
+
 	private void readElement(JsonObject obj, ElementManager manager) {
 		JsonArray from = null;
 		JsonArray to = null;

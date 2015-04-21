@@ -1,5 +1,6 @@
 package com.mrcrayfish.modelcreator.panels;
 
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.GridLayout;
@@ -15,6 +16,7 @@ import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
+import com.mrcrayfish.modelcreator.Icons;
 import com.mrcrayfish.modelcreator.element.Element;
 import com.mrcrayfish.modelcreator.element.ElementManager;
 import com.mrcrayfish.modelcreator.util.Parser;
@@ -41,8 +43,8 @@ public class SizePanel extends JPanel implements IValueUpdater
 	{
 		this.manager = manager;
 		setLayout(new GridLayout(3, 3, 4, 4));
-		setBorder(BorderFactory.createTitledBorder(BorderFactory.createEmptyBorder(), "Size"));
-		setMaximumSize(new Dimension(186, 124));
+		setBorder(BorderFactory.createTitledBorder(BorderFactory.createLineBorder(new Color(221, 221, 228), 5), "<html><b>Size</b></html>"));
+ 		setMaximumSize(new Dimension(186, 124));
 		initComponents();
 		initProperties();
 		addComponents();
@@ -50,15 +52,15 @@ public class SizePanel extends JPanel implements IValueUpdater
 
 	public void initComponents()
 	{
-		btnPlusX = new JButton("+");
-		btnPlusY = new JButton("+");
-		btnPlusZ = new JButton("+");
+		btnPlusX = new JButton(Icons.arrow_up);
+		btnPlusY = new JButton(Icons.arrow_up);
+		btnPlusZ = new JButton(Icons.arrow_up);
 		xSizeField = new JTextField();
 		ySizeField = new JTextField();
 		zSizeField = new JTextField();
-		btnNegX = new JButton("-");
-		btnNegY = new JButton("-");
-		btnNegZ = new JButton("-");
+		btnNegX = new JButton(Icons.arrow_down);
+		btnNegY = new JButton(Icons.arrow_down);
+		btnNegZ = new JButton(Icons.arrow_down);
 	}
 
 	public void initProperties()
@@ -71,7 +73,7 @@ public class SizePanel extends JPanel implements IValueUpdater
 			@Override
 			public void keyPressed(KeyEvent e) {
 				if (e.getKeyCode() == KeyEvent.VK_ENTER) {
-					Element element = manager.getSelectedCuboid();
+					Element element = manager.getSelectedElement();
 					if(element != null) {
 						element.setWidth((Parser.parseDouble(xSizeField.getText(), element.getWidth())));
 						element.updateUV();
@@ -83,7 +85,7 @@ public class SizePanel extends JPanel implements IValueUpdater
 		xSizeField.addFocusListener(new FocusAdapter() {
 			@Override
 			public void focusLost(FocusEvent e) {
-				Element element = manager.getSelectedCuboid();
+				Element element = manager.getSelectedElement();
 				if(element != null) {
 					element.setWidth((Parser.parseDouble(xSizeField.getText(), element.getWidth())));
 					element.updateUV();
@@ -99,7 +101,7 @@ public class SizePanel extends JPanel implements IValueUpdater
 			@Override
 			public void keyPressed(KeyEvent e) {
 				if (e.getKeyCode() == KeyEvent.VK_ENTER) {
-					Element element = manager.getSelectedCuboid();
+					Element element = manager.getSelectedElement();
 					if(element != null) {
 						element.setHeight((Parser.parseDouble(ySizeField.getText(), element.getHeight())));
 						element.updateUV();
@@ -111,7 +113,7 @@ public class SizePanel extends JPanel implements IValueUpdater
 		ySizeField.addFocusListener(new FocusAdapter() {
 			@Override
 			public void focusLost(FocusEvent e) {
-				Element element = manager.getSelectedCuboid();
+				Element element = manager.getSelectedElement();
 				if(element != null) {
 					element.setHeight((Parser.parseDouble(ySizeField.getText(), element.getHeight())));
 					element.updateUV();
@@ -127,7 +129,7 @@ public class SizePanel extends JPanel implements IValueUpdater
 			@Override
 			public void keyPressed(KeyEvent e) {
 				if (e.getKeyCode() == KeyEvent.VK_ENTER) {
-					Element element = manager.getSelectedCuboid();
+					Element element = manager.getSelectedElement();
 					if(element != null) {
 						element.setDepth((Parser.parseDouble(zSizeField.getText(), element.getDepth())));
 						element.updateUV();
@@ -139,7 +141,7 @@ public class SizePanel extends JPanel implements IValueUpdater
 		zSizeField.addFocusListener(new FocusAdapter() {
 			@Override
 			public void focusLost(FocusEvent e) {
-				Element element = manager.getSelectedCuboid();
+				Element element = manager.getSelectedElement();
 				if(element != null) {
 					element.setDepth((Parser.parseDouble(zSizeField.getText(), element.getDepth())));
 					element.updateUV();
@@ -150,9 +152,9 @@ public class SizePanel extends JPanel implements IValueUpdater
 
 		btnPlusX.addActionListener(e ->
 		{
-			if (manager.getSelectedCuboid() != null)
+			if (manager.getSelectedElement() != null)
 			{
-				Element cube = manager.getSelectedCuboid();
+				Element cube = manager.getSelectedElement();
 				if ((e.getModifiers() & ActionEvent.SHIFT_MASK) == 1)
 				{
 					cube.addWidth(0.1F);
@@ -171,9 +173,9 @@ public class SizePanel extends JPanel implements IValueUpdater
 
 		btnPlusY.addActionListener(e ->
 		{
-			if (manager.getSelectedCuboid() != null)
+			if (manager.getSelectedElement() != null)
 			{
-				Element cube = manager.getSelectedCuboid();
+				Element cube = manager.getSelectedElement();
 				if ((e.getModifiers() & ActionEvent.SHIFT_MASK) == 1)
 				{
 					cube.addHeight(0.1F);
@@ -192,9 +194,9 @@ public class SizePanel extends JPanel implements IValueUpdater
 
 		btnPlusZ.addActionListener(e ->
 		{
-			if (manager.getSelectedCuboid() != null)
+			if (manager.getSelectedElement() != null)
 			{
-				Element cube = manager.getSelectedCuboid();
+				Element cube = manager.getSelectedElement();
 				if ((e.getModifiers() & ActionEvent.SHIFT_MASK) == 1)
 				{
 					cube.addDepth(0.1F);
@@ -213,9 +215,9 @@ public class SizePanel extends JPanel implements IValueUpdater
 
 		btnNegX.addActionListener(e ->
 		{
-			if (manager.getSelectedCuboid() != null)
+			if (manager.getSelectedElement() != null)
 			{
-				Element cube = manager.getSelectedCuboid();
+				Element cube = manager.getSelectedElement();
 				if ((e.getModifiers() & ActionEvent.SHIFT_MASK) == 1)
 				{
 					cube.addWidth(-0.1F);
@@ -234,9 +236,9 @@ public class SizePanel extends JPanel implements IValueUpdater
 
 		btnNegY.addActionListener(e ->
 		{
-			if (manager.getSelectedCuboid() != null)
+			if (manager.getSelectedElement() != null)
 			{
-				Element cube = manager.getSelectedCuboid();
+				Element cube = manager.getSelectedElement();
 				if ((e.getModifiers() & ActionEvent.SHIFT_MASK) == 1)
 				{
 					cube.addHeight(-0.1F);
@@ -255,9 +257,9 @@ public class SizePanel extends JPanel implements IValueUpdater
 
 		btnNegZ.addActionListener(e ->
 		{
-			if (manager.getSelectedCuboid() != null)
+			if (manager.getSelectedElement() != null)
 			{
-				Element cube = manager.getSelectedCuboid();
+				Element cube = manager.getSelectedElement();
 				if ((e.getModifiers() & ActionEvent.SHIFT_MASK) == 1)
 				{
 					cube.addDepth(-0.1F);

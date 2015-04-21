@@ -12,6 +12,7 @@ import org.newdawn.slick.opengl.Texture;
 public class TextureEntry
 {
 	private String name;
+	private String location;
 	private List<Texture> texture = new ArrayList<Texture>();
 	private List<ImageIcon> image = new ArrayList<ImageIcon>();
 	private List<Integer> frames = new ArrayList<Integer>();
@@ -20,9 +21,10 @@ public class TextureEntry
 	private boolean blurred = false;
 	private boolean interpolate = false;
 
-	public TextureEntry(String name, Texture texture, ImageIcon image)
+	public TextureEntry(String name, Texture texture, ImageIcon image, String location)
 	{
 		this.name = name;
+		this.location = location;
 		
 		this.texture.add(texture);
 		this.image.add(image);
@@ -43,6 +45,10 @@ public class TextureEntry
 	public void setName(String name)
 	{
 		this.name = name;
+	}
+
+	public String getLocation() {
+		return location;
 	}
 
 	public Texture getTexture()
