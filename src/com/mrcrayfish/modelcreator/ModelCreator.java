@@ -190,7 +190,7 @@ public class ModelCreator extends JFrame
 		
 		JMenuItem menuItemImport = new JMenuItem("Import");
 		menuItemImport.setMnemonic(KeyEvent.VK_I);
-		menuItemImport.setToolTipText("Import model from JSON");
+		menuItemImport.setToolTipText("Import Model from JSON");
 		menuItemImport.addActionListener(e ->
 		{
 			JFileChooser chooser = new JFileChooser();
@@ -209,7 +209,7 @@ public class ModelCreator extends JFrame
 
 		JMenuItem menuItemExport = new JMenuItem("Export");
 		menuItemExport.setMnemonic(KeyEvent.VK_E);
-		menuItemExport.setToolTipText("Export model to JSON");
+		menuItemExport.setToolTipText("Export Model to JSON");
 		menuItemExport.addActionListener(e ->
 		{
 			JFileChooser chooser = new JFileChooser();
@@ -234,7 +234,7 @@ public class ModelCreator extends JFrame
 
 		JMenuItem menuItemExit = new JMenuItem("Exit");
 		menuItemExit.setMnemonic(KeyEvent.VK_E);
-		menuItemExit.setToolTipText("Exit application");
+		menuItemExit.setToolTipText("Exit Application");
 		menuItemExit.addActionListener(e ->
 		{
 			System.exit(0);
@@ -242,11 +242,11 @@ public class ModelCreator extends JFrame
 		
 		JMenuItem menuItemTexturePath = new JMenuItem("Set Texture path");
 		menuItemTexturePath.setMnemonic(KeyEvent.VK_S);
-		menuItemTexturePath.setToolTipText("Set the base path from where to look for textures");
+		menuItemTexturePath.setToolTipText("Set the base path to look for textures");
 		menuItemTexturePath.addActionListener(e ->
 		{
 			JFileChooser chooser = new JFileChooser();
-			chooser.setDialogTitle("Texture path");
+			chooser.setDialogTitle("Texture Path");
 			chooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
 			int returnVal = chooser.showOpenDialog(null);
 			if (returnVal == JFileChooser.APPROVE_OPTION)
