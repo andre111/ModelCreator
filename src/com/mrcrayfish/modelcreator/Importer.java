@@ -146,6 +146,13 @@ public class Importer
 			to = obj.get("to").getAsJsonArray();
 		}
 		
+		String name = "Element";
+		if (obj.has("name") && obj.get("name").isJsonPrimitive()) {
+			name = obj.get("name").getAsString();
+		} else if (obj.has("comment") && obj.get("comment").isJsonPrimitive()) {
+			name = obj.get("comment").getAsString();
+		}
+
 		if(from!=null && to!=null) {
 			double x = from.get(0).getAsDouble();
 			double y = from.get(1).getAsDouble();
@@ -156,6 +163,7 @@ public class Importer
 			double d = to.get(2).getAsDouble() - z;
 			
 			Element element = new Element(w, h, d);
+			element.setName(name);
 			element.setStartX(x);
 			element.setStartY(y);
 			element.setStartZ(z);
@@ -200,9 +208,9 @@ public class Importer
 			if(obj.has("faces") && obj.get("faces").isJsonObject()) {
 				JsonObject faces = obj.get("faces").getAsJsonObject();
 				
-				for(String name : faceNames) {
-					if(faces.has(name) && faces.get(name).isJsonObject()) {
-						readFace(faces.get(name).getAsJsonObject(), name, element);
+				for(String faceName : faceNames) {
+					if(faces.has(faceName) && faces.get(faceName).isJsonObject()) {
+						readFace(faces.get(faceName).getAsJsonObject(), faceName, element);
 					}
 				}
 			}
