@@ -6,6 +6,8 @@ import java.awt.BorderLayout;
 import java.awt.Canvas;
 import java.awt.Dimension;
 import java.awt.Font;
+import java.awt.Image;
+import java.awt.Toolkit;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.awt.event.WindowAdapter;
@@ -84,6 +86,7 @@ public class ModelCreator extends JFrame
 		setPreferredSize(new Dimension(1200, 835));
  		setMinimumSize(new Dimension(1200, 500));
 		setLayout(new BorderLayout(10, 0));
+		setIconImages(getIcons());
 
 		canvas = new Canvas();
 		sidebar = ELEMENT_SIDE_BAR;
@@ -171,6 +174,15 @@ public class ModelCreator extends JFrame
 		scroll.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
 		scroll.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
 		add(scroll, BorderLayout.EAST);
+	}
+
+	private List<Image> getIcons() {
+		List<Image> icons = new ArrayList<Image>();
+		icons.add(Toolkit.getDefaultToolkit().getImage("res/icons/set/icon_16x.png"));
+		icons.add(Toolkit.getDefaultToolkit().getImage("res/icons/set/icon_32x.png"));
+		icons.add(Toolkit.getDefaultToolkit().getImage("res/icons/set/icon_64x.png"));
+		icons.add(Toolkit.getDefaultToolkit().getImage("res/icons/set/icon_128x.png"));
+		return icons;
 	}
 	
 	private void setupMenuBar() {
