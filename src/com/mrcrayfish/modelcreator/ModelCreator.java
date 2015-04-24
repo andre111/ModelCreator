@@ -125,6 +125,7 @@ public class ModelCreator extends JFrame
 		pack();
 		setVisible(true);
 		setLocationRelativeTo(null);
+		setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 
 		Thread loopThread = new Thread(new Runnable()
 		{
