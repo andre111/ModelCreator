@@ -104,7 +104,7 @@ public class TexturePanel extends JPanel implements TextureCallback
 				{
 					if ((e.getModifiers() & ActionEvent.SHIFT_MASK) == 1)
 					{
-						manager.getSelectedElement().setAllTextures(texture.getTexture(), texture.getTexture());
+						manager.getSelectedElement().setAllTextures(texture.getTexture(), texture.getLocation());
 					}
 					else
 					{
