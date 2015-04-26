@@ -126,17 +126,21 @@ public class Exporter
 	{
 		writer.name("from");
 		writer.beginArray();
+		writer.setIndent("");
 		writer.value(cuboid.getStartX());
 		writer.value(cuboid.getStartY());
 		writer.value(cuboid.getStartZ());
 		writer.endArray();
+		writer.setIndent("\t");
 		
 		writer.name("to");
 		writer.beginArray();
+		writer.setIndent("");
 		writer.value(cuboid.getStartX() + cuboid.getWidth());
 		writer.value(cuboid.getStartY() + cuboid.getHeight());
 		writer.value(cuboid.getStartZ() + cuboid.getDepth());
 		writer.endArray();
+		writer.setIndent("\t");
 	}
 	
 	private void writeRotation(JsonWriter writer, Element cuboid) throws IOException
@@ -146,10 +150,12 @@ public class Exporter
 		
 		writer.name("origin");
 		writer.beginArray();
+		writer.setIndent("");
 		writer.value(cuboid.getOriginX());
 		writer.value(cuboid.getOriginY());
 		writer.value(cuboid.getOriginZ());
 		writer.endArray();
+		writer.setIndent("\t");
 		
 		writer.name("axis").value(Element.parseAxis(cuboid.getPrevAxis()));
 		writer.name("angle").value(cuboid.getRotation());
@@ -174,11 +180,13 @@ public class Exporter
 				
 				writer.name("uv");
 				writer.beginArray();
+				writer.setIndent("");
 				writer.value(face.getStartU());
 				writer.value(face.getStartV());
 				writer.value(face.getEndU());
 				writer.value(face.getEndV());
 				writer.endArray();
+				writer.setIndent("\t");
 				
 				if (face.getRotation() > 0)
 					writer.name("rotation").value((int) face.getRotation() * 90);
