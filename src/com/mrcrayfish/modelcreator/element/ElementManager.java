@@ -31,4 +31,10 @@ public interface ElementManager
 	public void addElement(Element e);
 	
 	public void removeElement(int pos);
+	
+	public void setParticle(String texture);
+	
+	public String getParticle();
+	
+	public void reset();
 }

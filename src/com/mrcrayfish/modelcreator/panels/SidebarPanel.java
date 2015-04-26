@@ -15,7 +15,6 @@ import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.JList;
 import javax.swing.JPanel;
-import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JTextField;
@@ -31,7 +30,6 @@ import com.mrcrayfish.modelcreator.panels.tabs.ElementPanel;
 import com.mrcrayfish.modelcreator.panels.tabs.FacePanel;
 import com.mrcrayfish.modelcreator.panels.tabs.RotationPanel;
 import com.mrcrayfish.modelcreator.texture.PendingTexture;
-import com.mrcrayfish.modelcreator.util.ComponentUtil;
 
 public class SidebarPanel extends JPanel implements ElementManager
 {
@@ -50,15 +48,16 @@ public class SidebarPanel extends JPanel implements ElementManager
 	private JButton btnDuplicate = new JButton();
 	private JTextField name = new JTextField();
 	private CuboidTabbedPane tabbedPane = new CuboidTabbedPane(this);
-	private JRadioButton boxAmbient;
-	
+
+	private String particle = null;
+	//private String particleLocation = null;
 	private boolean ambientOcc = true;
 
 	public SidebarPanel(ModelCreator creator)
 	{
 		this.creator = creator;
 		setLayout(layout = new SpringLayout());
-		setPreferredSize(new Dimension(200, 780));
+		setPreferredSize(new Dimension(200, 760));
 		initComponents();
 		setLayoutConstaints();
 	}
@@ -71,7 +70,7 @@ public class SidebarPanel extends JPanel implements ElementManager
 		btnContainer.setPreferredSize(new Dimension(190, 30));
 
 		btnAdd.setIcon(Icons.cube);
- 		btnAdd.setToolTipText("New Element");
+		btnAdd.setToolTipText("New Element");
 		btnAdd.addActionListener(e ->
 		{
 			model.addElement(new Element(1, 1, 1));
@@ -81,7 +80,7 @@ public class SidebarPanel extends JPanel implements ElementManager
 		btnContainer.add(btnAdd);
 
 		btnRemove.setIcon(Icons.bin);
- 		btnRemove.setToolTipText("Remove Element");
+		btnRemove.setToolTipText("Remove Element");
 		btnRemove.addActionListener(e ->
 		{
 			int selected = list.getSelectedIndex();
@@ -98,7 +97,7 @@ public class SidebarPanel extends JPanel implements ElementManager
 		btnContainer.add(btnRemove);
 
 		btnDuplicate.setIcon(Icons.copy);
- 		btnDuplicate.setToolTipText("Duplicate Element");
+		btnDuplicate.setToolTipText("Duplicate Element");
 		btnDuplicate.addActionListener(e ->
 		{
 			int selected = list.getSelectedIndex();
@@ -172,11 +171,6 @@ public class SidebarPanel extends JPanel implements ElementManager
 			}
 		});
 		add(tabbedPane);
-		
-		boxAmbient = ComponentUtil.createRadioButton("Ambient Occulusion", "Determine the light for each element");
- 		boxAmbient.setSelected(true);
-		boxAmbient.addActionListener(a -> ambientOcc = boxAmbient.isSelected());
-		add(boxAmbient);
 	}
 
 	public void setLayoutConstaints()
@@ -184,7 +178,6 @@ public class SidebarPanel extends JPanel implements ElementManager
 		layout.putConstraint(SpringLayout.NORTH, name, 212, SpringLayout.NORTH, this);
 		layout.putConstraint(SpringLayout.NORTH, btnContainer, 176, SpringLayout.NORTH, this);
 		layout.putConstraint(SpringLayout.NORTH, tabbedPane, 250, SpringLayout.NORTH, this);
-		layout.putConstraint(SpringLayout.NORTH, boxAmbient, 755, SpringLayout.NORTH, this);
 	}
 
 	@Override
@@ -195,7 +188,7 @@ public class SidebarPanel extends JPanel implements ElementManager
 			return (Element) model.getElementAt(i);
 		return null;
 	}
-	
+
 	@Override
 	public void setSelectedElement(int pos)
 	{
@@ -265,12 +258,11 @@ public class SidebarPanel extends JPanel implements ElementManager
 	{
 		return ambientOcc;
 	}
-	
+
 	@Override
 	public void setAmbientOcc(boolean occ)
 	{
 		ambientOcc = occ;
-		boxAmbient.setSelected(occ);
 	}
 
 	@Override
@@ -289,5 +281,25 @@ public class SidebarPanel extends JPanel implements ElementManager
 	public void removeElement(int pos)
 	{
 		model.remove(pos);
+	}
+
+	@Override
+	public void setParticle(String texture)
+	{
+		this.particle = texture;
+	}
+
+	@Override
+	public String getParticle()
+	{
+		return particle;
+	}
+
+	@Override
+	public void reset()
+	{
+		clearElements();
+		ambientOcc = true;
+		particle = null;
 	}
 }

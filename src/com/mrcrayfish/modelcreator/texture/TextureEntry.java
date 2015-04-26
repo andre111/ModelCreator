@@ -19,6 +19,7 @@ public class TextureEntry
 	private Map<Integer, Integer> customTimes = new HashMap<Integer, Integer>();
 	private int frametime;
 	private boolean blurred = false;
+	private boolean clamped = false;
 	private boolean interpolate = false;
 
 	public TextureEntry(String name, Texture texture, ImageIcon image, String location) {
@@ -92,6 +93,14 @@ public class TextureEntry
 	
 	public boolean isBlurred() {
 		return blurred;
+	}
+	
+	public void setClamped(boolean clamp) {
+		clamped = clamp;
+	}
+	
+	public boolean isClamped() {
+		return clamped;
 	}
 	
 	public void setInterpolate(boolean interpolate) {

@@ -122,7 +122,11 @@ public class Importer
 						textureMap.put(entry.getKey(), textureMap.get(texture.replace("#", "")));
 					} else {
 						System.out.println("2. Adding key '" + entry.getKey().replace("#", "") + "' with texture '" + texture + "'.");
-						textureMap.put(entry.getKey().replace("#", ""), texture);
+						if(entry.getKey().equals("particle")) {
+							manager.setParticle(texture);
+						} else {
+							textureMap.put(entry.getKey().replace("#", ""), texture);
+						}
 						loadTexture(file, texture);
 					}
 				}

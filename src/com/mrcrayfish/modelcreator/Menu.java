@@ -121,7 +121,7 @@ public class Menu extends JMenuBar
 			int returnVal = JOptionPane.showConfirmDialog(creator, "You current work will be cleared, are you sure?", "Note", JOptionPane.YES_NO_OPTION);
 			if (returnVal == JOptionPane.YES_OPTION)
 			{
-				creator.getElementManager().clearElements();
+				creator.getElementManager().reset();
 				creator.getElementManager().updateValues();
 			}
 		});

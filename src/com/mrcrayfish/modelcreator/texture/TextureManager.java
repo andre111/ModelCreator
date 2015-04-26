@@ -91,7 +91,7 @@ public class TextureManager
 			TextureEntry entry = null;
 			if(animation==null) {
 				Texture texture = BufferedImageUtil.getTexture("", bimage);
-				ImageIcon image = upscale(new ImageIcon(path + "/" + fileName));
+				ImageIcon image = upscale(new ImageIcon(path + "/" + fileName), 256);
 				
 				entry = new TextureEntry(fileName.replace(".png", "").replaceAll("\\d*$", ""), texture, image, path + "/" + fileName);
 			} else {
@@ -111,7 +111,7 @@ public class TextureManager
 					int ypos = 0;
 					while(ypos + fHeight <= bimage.getHeight()) {
 						BufferedImage subImage = bimage.getSubimage(xpos, ypos, fWidth, fHeight);
-						ImageIcon iconImage = upscale(new ImageIcon(subImage));
+						ImageIcon iconImage = upscale(new ImageIcon(subImage), 256);
 						Texture texture = BufferedImageUtil.getTexture("", subImage);
 						
 						entry.addTexture(texture, iconImage);
@@ -177,6 +177,10 @@ public class TextureManager
 					boolean blur = textureObj.get("blur").getAsBoolean();
 					entry.setBlurred(blur);
 				}
+				if(textureObj.has("clamp") && textureObj.get("clamp").isJsonPrimitive()) {
+					boolean clamp = textureObj.get("clamp").getAsBoolean();
+					entry.setClamped(clamp);
+				}
 			}
 			
 			if(entry!=null) {
@@ -186,10 +190,10 @@ public class TextureManager
 		return true;
 	}
 
-	public static ImageIcon upscale(ImageIcon source)
+	public static ImageIcon upscale(ImageIcon source, int size)
 	{
 		Image img = source.getImage();
-		Image newimg = img.getScaledInstance(256, 256, java.awt.Image.SCALE_FAST);
+		Image newimg = img.getScaledInstance(size, size, java.awt.Image.SCALE_FAST);
 		return new ImageIcon(newimg);
 	}
 

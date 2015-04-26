@@ -95,6 +95,9 @@ public class Exporter
 	{
 		writer.name("textures");
 		writer.beginObject();
+		if(manager.getParticle()!=null) {
+			writer.name("particle").value("blocks/"+manager.getParticle());
+		}
 		for (String texture : textureList)
 		{
 			writer.name(""+textureList.indexOf(texture)).value(texture);
